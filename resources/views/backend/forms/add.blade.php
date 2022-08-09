@@ -2,14 +2,6 @@
 @section('pagetitle', 'Form Add')
 
 @section('head')
-  <!-- daterange picker -->
-  <link rel="stylesheet" href="{{ URL::asset('assests/plugins/daterangepicker/daterangepicker.css') }}">
-  <style>
-  .col {
-    width: 50%;
-    float: left;
-  }
-  </style>
 @endsection
 
 @section('content')
@@ -34,16 +26,6 @@
     <section class="content">
       <div class="row">
         <div class="col-md-12">
-        @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-                </ul>
-            </div>
-        @endif
           <div class="card card-primary">
             <div class="card-header">
               <h3 class="card-title">Add Form Details</h3>
@@ -54,13 +36,29 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
-                          <label for="inputTitle">Form Title <span class="text-danger">*</span></label>
-                          <input type="text" id="inputTitle" class="form-control" name="title" required>
-                          @error('title')
-                          <span class="invalid-feedback" role="alert" style="display:block;">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                          @enderror
+                        <label for="inputTitle">Form Title <span class="text-danger">*</span></label>
+                        <input type="text" id="inputTitle" class="form-control" name="title" required>
+                        @error('title')
+                        <span class="invalid-feedback" role="alert" style="display:block;">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                      </div>
+                      <div class="form-group {{ $errors->has('sender_email') ? 'has-error' : ''}}">
+                      <label for="inputSenderEmail">Sender Email <span class="text-danger">*</span></label>
+                        <div class="custom-radio">
+                          <input type="radio" id="showemailinputYes" class="showemailinput" name="showemail" value="Yes">
+                          <label for="showreportYes">Yes</label>
+                          <input type="radio" id="showemailinputNo" class="showemailinput" name="showemail" value="No">
+                          <label for="showreportNo">No</label><br>
+                        </div>
+                        <div id="showemaildivYes" class="{{ $errors->has('sender_email') ? 'has-error' : ''}}" style="display:none;">
+                        <input type="text" id="inputSenderEmail" class="form-control" name="sender_email" placeholder="Enter sender emails">
+                        @error('sender_email')
+                        <span class="invalid-feedback" role="alert" style="display:block;">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                         </div>
                       </div>
                       <div class="form-group {{ $errors->has('status') ? 'has-error' : ''}}">
@@ -79,10 +77,10 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-12 mb-5 mx-3">
+                    <div class="col-12 mb-2">
                       <div class="form-group">
-                        <a href="{{ route('forms.index') }}" class="btn btn-secondary">Cancel</a>
-                        <input type="submit" value="Create new form" class="btn btn-success float-right">
+                        <a href="{{ route('forms.index') }}" class="btn btn-secondary mx-3">Cancel</a>
+                        <input type="submit" value="Create new form" class="btn btn-success float-right mx-3">
                       </div>
                     </div>
                   </div>
@@ -99,15 +97,18 @@
 @endsection
 
 @section('footerscript')
-<!-- date-range-picker -->
-<script src="{{ URL::asset('assests/plugins/daterangepicker/daterangepicker.js') }}"></script>
-
 <script type="text/javascript">
-    $(document).ready(function() {
-          //Date picker
-    $('#reservationdate').datetimepicker({
-        format: 'L'
+  $(document).ready(function () {
+    $(".showemailinput").click(function(){
+      if($(this).val() == 'Yes')
+      {
+        $('#showemaildiv'+$(this).val()).show();
+      }
+      else
+      {
+        $('#showemaildivYes').hide();
+      }
     });
-    });
+  });
 </script>
 @endsection

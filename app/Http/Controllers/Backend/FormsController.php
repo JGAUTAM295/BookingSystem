@@ -87,6 +87,11 @@ class FormsController extends Controller
             $newForm = New Forms();
             $newForm->user_id = Auth::user()->id;
             $newForm->title = $request->title;
+            $forms->showemail = $request->showemail;
+            if($request->showemail == 'Yes')
+            {
+                $forms->sender_email = $request->sender_email;
+            }
             $newForm->status = $request->status;
             $newForm->created_by = Auth::user()->id;
 
@@ -147,6 +152,15 @@ class FormsController extends Controller
 
         $forms = Forms::find($id);
         $forms->title = $request->title;
+        $forms->showemail = $request->showemail;
+        if($request->showemail == 'Yes')
+        {
+            $forms->sender_email = $request->sender_email;
+        }
+        if($request->showemail == 'No')
+        {
+            $forms->sender_email = null;
+        }
         $forms->status = $request->status;
         $forms->updated_by = Auth::user()->id;
    

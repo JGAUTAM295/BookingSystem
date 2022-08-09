@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 08, 2022 at 02:38 PM
+-- Generation Time: Aug 09, 2022 at 02:44 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.28
 
@@ -51,9 +51,11 @@ CREATE TABLE `admin_mails` (
 
 CREATE TABLE `booked_artists` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `form_id` int(20) DEFAULT NULL,
   `booking_id` int(10) UNSIGNED NOT NULL,
   `col_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `artist_id` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `booking_date` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -62,10 +64,33 @@ CREATE TABLE `booked_artists` (
 -- Dumping data for table `booked_artists`
 --
 
-INSERT INTO `booked_artists` (`id`, `booking_id`, `col_key`, `artist_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 'dancer=11', '15', '2022-08-08 10:50:27', '2022-08-08 10:50:27'),
-(2, 2, 'dancer=11', '15', '2022-08-08 10:51:23', '2022-08-08 10:51:58'),
-(3, 2, 'musician=12', '13', '2022-08-08 10:51:23', '2022-08-08 10:51:58');
+INSERT INTO `booked_artists` (`id`, `form_id`, `booking_id`, `col_key`, `artist_id`, `booking_date`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'dancer=11', '15', '08/12/2022 4:18 PM', '2022-08-08 10:50:27', '2022-08-09 11:51:14'),
+(2, 1, 2, 'dancer=11', '15', '08/15/2022 4:20 PM', '2022-08-08 10:51:23', '2022-08-09 11:51:06'),
+(3, 1, 2, 'musician=12', '13', '08/15/2022 4:20 PM', '2022-08-08 10:51:23', '2022-08-09 11:51:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booked_artist_dates`
+--
+
+CREATE TABLE `booked_artist_dates` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `booking_id` int(10) UNSIGNED NOT NULL,
+  `col_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `booking_date` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `booked_artist_dates`
+--
+
+INSERT INTO `booked_artist_dates` (`id`, `booking_id`, `col_key`, `booking_date`, `created_at`, `updated_at`) VALUES
+(1, 2, 'event-date-time=2', '08/15/2022 4:20 PM', '2022-08-09 11:22:01', '2022-08-09 11:51:06'),
+(2, 1, 'event-date-time=2', '08/12/2022 4:18 PM', '2022-08-09 11:22:28', '2022-08-09 11:51:14');
 
 -- --------------------------------------------------------
 
@@ -89,8 +114,11 @@ CREATE TABLE `booking_forms` (
 --
 
 INSERT INTO `booking_forms` (`id`, `user_id`, `form_id`, `form_info`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '{\"i-want-this-artist-for-a=1\":\"Guest Appearance\",\"event-date-time=2\":\"08\\/12\\/2022 4:18 PM\",\"name-of-event=3\":\"Birthday Party\",\"venue-address=4\":\"Mohali\",\"event-attire=5\":\"Casual\",\"your-full-name=6\":\"Test\",\"comments=8\":\"dsfdfsd\",\"dancer=11\":\"15\"}', 1, NULL, '2022-08-08 10:50:27', '2022-08-08 10:50:27'),
-(2, 1, 1, '{\"i-want-this-artist-for-a=1\":\"Musical Performance\",\"event-date-time=2\":\"08\\/13\\/2022 4:20 PM\",\"name-of-event=3\":\"Dj Party\",\"venue-address=4\":\"Mohali\",\"event-attire=5\":\"Doesn\'t Really Matter\",\"your-full-name=6\":\"ABC\",\"comments=8\":\"fsdf\",\"dancer=11\":\"15\",\"musician=12\":\"13\"}', 1, 1, '2022-08-08 10:51:23', '2022-08-08 10:51:58');
+(1, 1, 1, '{\"i-want-this-artist-for-a=1\":\"Guest Appearance\",\"event-date-time=2\":\"08\\/12\\/2022 4:18 PM\",\"name-of-event=3\":\"Birthday Party\",\"venue-address=4\":\"Mohali\",\"event-attire=5\":\"Casual\",\"your-full-name=6\":\"Test\",\"comments=8\":\"dsfdfsd\",\"dancer=11\":\"15\",\"musician=12\":null}', 1, 1, '2022-08-08 10:50:27', '2022-08-09 11:22:28'),
+(2, 1, 1, '{\"i-want-this-artist-for-a=1\":\"Musical Performance\",\"event-date-time=2\":\"08\\/15\\/2022 4:20 PM\",\"name-of-event=3\":\"Dj Party\",\"venue-address=4\":\"Mohali\",\"event-attire=5\":\"Doesn\'t Really Matter\",\"your-full-name=6\":\"ABC\",\"comments=8\":\"fsdf\",\"dancer=11\":\"15\",\"musician=12\":\"13\"}', 1, 1, '2022-08-08 10:51:23', '2022-08-09 11:24:42'),
+(3, 1, 2, '{\"name=13\":\"test\",\"email=14\":\"test@gmail.com\"}', 1, NULL, '2022-08-09 11:07:20', '2022-08-09 11:07:20'),
+(4, 1, 2, '{\"name=13\":\"test\",\"email=14\":\"test@gmail.com\"}', 1, NULL, '2022-08-09 11:07:42', '2022-08-09 11:07:42'),
+(5, 1, 2, '{\"name=13\":\"test\",\"email=14\":\"test@gmail.com\"}', 1, NULL, '2022-08-09 11:08:19', '2022-08-09 11:08:19');
 
 -- --------------------------------------------------------
 
@@ -150,7 +178,9 @@ INSERT INTO `custom_fields` (`id`, `form_id`, `name`, `slug`, `input_field_type`
 (6, 1, 'Your Full Name', 'your-full-name', 'Text', NULL, 1, NULL, 6, 1, 1, 1, '2022-08-04 10:06:02', '2022-08-04 10:18:11'),
 (8, 1, 'Comments', 'comments', 'Textarea', NULL, 0, NULL, 7, 1, 1, NULL, '2022-08-04 10:52:49', '2022-08-04 10:52:49'),
 (11, 1, 'Dancer', 'dancer', 'Artist', 'Dancer', 1, NULL, 8, 1, 1, 1, '2022-08-05 10:56:54', '2022-08-08 10:33:31'),
-(12, 1, 'Musician', 'musician', 'Artist', 'Musician', 0, NULL, 9, 1, 1, 1, '2022-08-08 10:10:06', '2022-08-08 10:33:39');
+(12, 1, 'Musician', 'musician', 'Artist', 'Musician', 0, NULL, 9, 1, 1, 1, '2022-08-08 10:10:06', '2022-08-08 10:33:39'),
+(13, 2, 'Name', 'name', 'Text', NULL, 1, NULL, 1, 1, 1, NULL, '2022-08-09 07:40:03', '2022-08-09 07:40:03'),
+(14, 2, 'Email', 'email', 'Email', NULL, 1, NULL, 2, 1, 1, NULL, '2022-08-09 07:40:15', '2022-08-09 07:40:15');
 
 -- --------------------------------------------------------
 
@@ -178,7 +208,7 @@ INSERT INTO `custom_fields_data` (`id`, `cf_id`, `name`, `status`, `created_by`,
 (2, 1, 'Guest Appearance', 1, 1, NULL, '2022-08-04 10:01:13', '2022-08-04 10:01:13'),
 (3, 1, 'Panel Discussion', 1, 1, NULL, '2022-08-04 10:01:29', '2022-08-04 10:01:29'),
 (4, 1, 'Voice-Over/AD(Radio/Internet)', 1, 1, NULL, '2022-08-04 10:01:42', '2022-08-04 10:01:42'),
-(6, 5, 'Casual', 1, 1, 1, '2022-08-04 10:04:37', '2022-08-04 10:37:31'),
+(6, 5, 'Casual', 1, 1, 1, '2022-08-04 10:04:37', '2022-08-09 12:41:33'),
 (7, 5, 'Semi-Formal', 1, 1, NULL, '2022-08-04 10:04:54', '2022-08-04 10:04:54'),
 (8, 5, 'Formal', 1, 1, NULL, '2022-08-04 10:05:02', '2022-08-04 10:05:02'),
 (9, 5, 'Doesn\'t Really Matter', 1, 1, NULL, '2022-08-04 10:05:12', '2022-08-04 10:05:12');
@@ -313,6 +343,8 @@ CREATE TABLE `forms` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `showemail` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sender_email` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` tinyint(4) NOT NULL,
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
@@ -324,8 +356,9 @@ CREATE TABLE `forms` (
 -- Dumping data for table `forms`
 --
 
-INSERT INTO `forms` (`id`, `user_id`, `title`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Dancer Booking Form', 1, 1, 1, '2022-08-04 12:20:05', '2022-08-04 12:34:09');
+INSERT INTO `forms` (`id`, `user_id`, `title`, `showemail`, `sender_email`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Dancer Booking Form', 'Yes', 'jyoti.610weblab@gmail.com', 1, 1, 1, '2022-08-04 12:20:05', '2022-08-09 09:56:35'),
+(2, 1, 'Test', 'Yes', 'jyoti.610weblab@gmail.com', 1, 1, 1, '2022-08-09 07:19:03', '2022-08-09 09:58:27');
 
 -- --------------------------------------------------------
 
@@ -439,7 +472,7 @@ CREATE TABLE `menuses` (
 
 INSERT INTO `menuses` (`id`, `user_role`, `menu_item`, `faicon`, `url`, `child_menu`, `parent_menu`, `menu_order`, `status`, `created_by`, `updated_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (1, 'admin,Super-Admin', 'Users', 'fas fa-users', '#', 'Yes', '2,3,4,5', '1', 1, 1, 1, NULL, '2022-07-05 01:01:41', '2022-07-08 01:31:45'),
-(4, 'admin,Super-Admin', 'Reports', 'fas fa-chart-pie', '#', 'Yes', '10,11,12', '5', 1, 1, 1, NULL, '2022-07-05 01:03:55', '2022-07-08 12:56:31'),
+(4, 'admin,Super-Admin', 'Reports', 'fas fa-chart-pie', '#', 'Yes', '10,11,12', '5', 2, 1, 1, NULL, '2022-07-05 01:03:55', '2022-08-08 12:42:56'),
 (5, 'Super-Admin', 'Menus', 'fas fa-th', '#', 'Yes', '13,14', '7', 1, 1, 1, NULL, '2022-07-05 01:04:57', '2022-07-19 11:11:29'),
 (6, 'admin,Super-Admin', 'Settings', 'fas fa-cog', '/settings', 'No', NULL, '9', 1, 1, 1, NULL, '2022-07-05 01:05:41', '2022-07-19 11:11:55'),
 (7, 'admin,Client,Staff,Super-Admin', 'Mail', 'far fa-envelope', '/mail', 'No', NULL, '8', 1, 1, 1, NULL, '2022-07-05 05:42:29', '2022-07-19 11:11:45'),
@@ -524,7 +557,8 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (4, 'App\\Models\\User', 5),
 (4, 'App\\Models\\User', 8),
 (4, 'App\\Models\\User', 15),
-(5, 'App\\Models\\User', 13);
+(5, 'App\\Models\\User', 13),
+(5, 'App\\Models\\User', 17);
 
 -- --------------------------------------------------------
 
@@ -767,7 +801,9 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (0, 'booking-forms.destroy', 'web', '2022-08-04 12:06:24', '2022-08-04 12:06:24'),
 (0, 'booking-forms.list', 'web', '2022-08-05 04:54:14', '2022-08-05 04:54:14'),
 (0, 'user.fetchartist', 'web', '2022-08-05 09:54:16', '2022-08-05 09:54:16'),
-(0, 'booking-forms.export', 'web', '2022-08-05 11:27:42', '2022-08-05 11:27:42');
+(0, 'booking-forms.export', 'web', '2022-08-05 11:27:42', '2022-08-05 11:27:42'),
+(0, 'booking-forms.report', 'web', '2022-08-09 07:01:12', '2022-08-09 07:01:12'),
+(0, 'booking.artistbooked', 'web', '2022-08-09 11:42:38', '2022-08-09 11:42:38');
 
 -- --------------------------------------------------------
 
@@ -854,7 +890,14 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '44196817e3e7d5ede963ebc5a4ecb86659dde1e730ece14c616d96e11bf03ccd', '[\"*\"]', NULL, '2022-08-04 05:22:41', '2022-08-04 05:22:41'),
 (0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '36e796a60e3389b6f99b8ded7947c771edabe959d6f08ea75da328380d7bc8d2', '[\"*\"]', NULL, '2022-08-05 04:21:39', '2022-08-05 04:21:39'),
 (0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '800ab7217cfa9c41ad7a36104d5912d484c28a6cd957653182bf8fe9150e52c3', '[\"*\"]', NULL, '2022-08-05 13:08:43', '2022-08-05 13:08:43'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c8705b9be8c1155256484144f862b6bb57d1120b420757cb59e8db67536426a5', '[\"*\"]', NULL, '2022-08-08 04:47:43', '2022-08-08 04:47:43');
+(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c8705b9be8c1155256484144f862b6bb57d1120b420757cb59e8db67536426a5', '[\"*\"]', NULL, '2022-08-08 04:47:43', '2022-08-08 04:47:43'),
+(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '70e5b87140bd8166d9d3c6e3e42cf21b9dd309a59770e59be9370419a1f32d92', '[\"*\"]', NULL, '2022-08-09 04:25:36', '2022-08-09 04:25:36'),
+(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '7002db54e68d78d2ab27bf626c07e512bb38f8412a932d800de0b16fdf9448c7', '[\"*\"]', NULL, '2022-08-09 04:31:47', '2022-08-09 04:31:47'),
+(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '5c28288cb8934d94133a3c9262607f09d1bef6a7605aa0e940c53a31223674ae', '[\"*\"]', NULL, '2022-08-09 04:32:24', '2022-08-09 04:32:24'),
+(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', 'ccc8b988d3a8584f5ccffefed3ab078fdc1a472a48e44285749b89bba8dfa4cf', '[\"*\"]', NULL, '2022-08-09 04:32:53', '2022-08-09 04:32:53'),
+(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', 'c05f804f452f16849ba57d7498f9bd825d483c1f2ef5aa861846910e14ccc1e2', '[\"*\"]', NULL, '2022-08-09 04:34:11', '2022-08-09 04:34:11'),
+(0, 'App\\Models\\User', 16, 'LaravelSanctumAuth', '26f03340d464ea1cdd852438cdf0b98fddc22f3dd57580c02fbd2d5dfda205bf', '[\"*\"]', NULL, '2022-08-09 04:38:14', '2022-08-09 04:38:14'),
+(0, 'App\\Models\\User', 17, 'LaravelSanctumAuth', '9890fff438b73dcaa1a2349a878e47fd9d7b2e757dd9a1f9f2e4b3bf5e5da67e', '[\"*\"]', NULL, '2022-08-09 04:44:33', '2022-08-09 04:44:33');
 
 -- --------------------------------------------------------
 
@@ -897,8 +940,8 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `bgcolor`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'web', NULL, '2022-06-23 04:09:09', '2022-06-23 04:09:09'),
-(2, 'Super-Admin', 'web', NULL, '2022-06-23 04:43:17', '2022-06-23 04:43:17'),
+(1, 'admin', 'web', '#135BAA', '2022-06-23 04:09:09', '2022-08-09 07:01:58'),
+(2, 'Super-Admin', 'web', '#C20505', '2022-06-23 04:43:17', '2022-08-09 07:01:36'),
 (3, 'Artist', 'web', NULL, '2022-06-23 04:44:05', '2022-08-04 08:13:29'),
 (4, 'Dancer', 'web', '#055DAC', '2022-06-27 01:50:29', '2022-08-08 06:50:56'),
 (5, 'Musician', 'web', '#511ADB', '2022-08-08 10:08:23', '2022-08-08 10:08:23');
@@ -919,6 +962,62 @@ CREATE TABLE `role_has_permissions` (
 --
 
 INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
+(1, 3),
+(2, 3),
+(3, 3),
+(30, 3),
+(83, 3),
+(84, 3),
+(101, 3),
+(102, 3),
+(103, 3),
+(104, 3),
+(108, 3),
+(110, 3),
+(111, 3),
+(125, 3),
+(132, 3),
+(133, 3),
+(134, 3),
+(135, 3),
+(1, 4),
+(2, 4),
+(70, 4),
+(83, 4),
+(84, 4),
+(101, 4),
+(102, 4),
+(103, 4),
+(104, 4),
+(108, 4),
+(110, 4),
+(111, 4),
+(132, 4),
+(133, 4),
+(134, 4),
+(135, 4),
+(1, 5),
+(2, 5),
+(4, 5),
+(5, 5),
+(6, 5),
+(7, 5),
+(8, 5),
+(9, 5),
+(30, 5),
+(83, 5),
+(84, 5),
+(102, 5),
+(103, 5),
+(104, 5),
+(105, 5),
+(106, 5),
+(108, 5),
+(110, 5),
+(132, 5),
+(133, 5),
+(134, 5),
+(135, 5),
 (1, 1),
 (2, 1),
 (3, 1),
@@ -1000,24 +1099,6 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (132, 1),
 (133, 1),
 (134, 1),
-(1, 3),
-(2, 3),
-(3, 3),
-(30, 3),
-(83, 3),
-(84, 3),
-(101, 3),
-(102, 3),
-(103, 3),
-(104, 3),
-(108, 3),
-(110, 3),
-(111, 3),
-(125, 3),
-(132, 3),
-(133, 3),
-(134, 3),
-(135, 3),
 (1, 2),
 (2, 2),
 (3, 2),
@@ -1143,45 +1224,7 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (133, 2),
 (134, 2),
 (135, 2),
-(0, 2),
-(1, 4),
-(2, 4),
-(70, 4),
-(83, 4),
-(84, 4),
-(101, 4),
-(102, 4),
-(103, 4),
-(104, 4),
-(108, 4),
-(110, 4),
-(111, 4),
-(132, 4),
-(133, 4),
-(134, 4),
-(135, 4),
-(1, 5),
-(2, 5),
-(4, 5),
-(5, 5),
-(6, 5),
-(7, 5),
-(8, 5),
-(9, 5),
-(30, 5),
-(83, 5),
-(84, 5),
-(102, 5),
-(103, 5),
-(104, 5),
-(105, 5),
-(106, 5),
-(108, 5),
-(110, 5),
-(132, 5),
-(133, 5),
-(134, 5),
-(135, 5);
+(0, 2);
 
 -- --------------------------------------------------------
 
@@ -1233,6 +1276,7 @@ CREATE TABLE `users` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'avatar.png',
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `permissionid` bigint(20) DEFAULT NULL,
@@ -1249,19 +1293,17 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `image`, `remember_token`, `permissionid`, `status`, `deleted_at`, `created_by`, `updated_by`, `created_at`, `updated_at`, `device_token`) VALUES
-(1, 'SuperAdmin', 'superamin@gmail.com', NULL, '$2y$10$fOtFfLEJ30EAC6U/0fOl6ed3ckJagB9llEzt1.FSIhIDTKHbQyBDC', '/users/avatar2_1656680911.png', NULL, 1, 1, NULL, NULL, 1, '2022-06-23 02:37:41', '2022-07-07 04:57:09', NULL),
-(2, 'Admin', 'admin@gmail.com', NULL, '$2y$10$VseD2y93UMRgObkxY0jad.P1zDV1k7sD9ZQ1peIh32Y4Zg8K4AgLu', '/users/avatar_1656680891.png', NULL, 1, 1, NULL, NULL, 1, '2022-06-23 04:09:09', '2022-07-01 07:38:11', NULL),
-(3, 'Nick', 'nick@gmail.com', NULL, '$2y$10$hTb1GpysrTERzj/0lWX9DOALgdQfNfKXzURNxZT7kRLaImhSZXd8S', 'avatar4.png_1656483131.png', NULL, NULL, 1, '2022-06-29 02:34:55', NULL, 1, '2022-06-27 01:49:58', '2022-06-29 02:34:55', NULL),
-(4, 'Ele', 'ele@gmail.com', NULL, '$2y$10$XRC/kX51O5qCDOuDqKLo/eEDwPSrx4zm5SJupvPx/r0JghVbdfBbS', 'avatar3.png_1656483113.png', NULL, NULL, 1, '2022-06-29 01:41:59', NULL, 1, '2022-06-27 01:53:37', '2022-06-29 01:41:59', NULL),
-(5, 'Mick', 'mick@gmail.com', NULL, '$2y$10$OMVPW2oFq5h3zCRpNlZB2uqpb5iaSLQLPD4BZINDJM9Y00EhwmQme', 'avatar5.png_1656486781.png', NULL, NULL, 1, '2022-06-29 01:43:29', NULL, 1, '2022-06-29 01:43:01', '2022-06-29 01:43:29', NULL),
-(6, 'Rahul', 'rahul@gmail.com', NULL, '$2y$10$Rs56cvXtL7tE4jMTdnIC7OOpfnN98C/qjhHNi395j9wphRmqW39bO', '/users/avatar5_1656680878.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:27:55', '2022-07-07 23:21:31', NULL),
-(7, 'Yogesh', 'yogesh@gmail.com', NULL, '$2y$10$DLglPsQXdKjSYozgrZ.Pq.xojOxU4OwBzQfuLDWf40YumJmc3LfHW', '/users/avatar_1656680861.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:34:14', '2022-07-07 23:21:13', 'cvEAfRpouEW9Z10KkOODyh:APA91bFXcZUoa-KqP5iQFlVeH8jWfUNk2b6APAYYDOH5ynQYyNvqHUQi7ip3JpiK1XjY89C6cti38w2hDWfQ060-bTKIFqBh7sl1VhbzjmuGox4HEhLL3wZKSk57aHHgocW3kuGTE64K'),
-(8, 'Sachin', 'sachin@gmail.com', NULL, '$2y$10$eKB5xi4V4q.Er62pM4/4Guv6R6zmW17gv9FcPQMnW.RSmzZwYjabS', '/users/avatar4_1656680839.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:34:42', '2022-07-19 11:55:29', 'cvEAfRpouEW9Z10KkOODyh:APA91bFXcZUoa-KqP5iQFlVeH8jWfUNk2b6APAYYDOH5ynQYyNvqHUQi7ip3JpiK1XjY89C6cti38w2hDWfQ060-bTKIFqBh7sl1VhbzjmuGox4HEhLL3wZKSk57aHHgocW3kuGTE64K'),
-(9, 'sandeep', 'sandeep@gmail.com', NULL, '$2y$10$FJP7f.Ea1jW1Vsynl3r8e.nqsyPccdGd4bDK5zZUkLI/lG7EUqjqq', '/users/user8-128x128_1656680791.jpg', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 07:40:35', '2022-07-19 11:55:25', NULL),
-(12, 'yogesh chandra', 'yogeshchandra@gmail.com', NULL, '$2y$10$WhMdG3srZK3nc7Q/EFVY3e3Da5fQuGiosyvOFpVVv7FnY7tNOMTXe', 'avatar.png', NULL, NULL, 1, NULL, NULL, 12, '2022-07-14 07:14:41', '2022-07-14 07:48:08', NULL),
-(13, 'abhay', 'abhay@gmail.com', NULL, '$2y$10$gPrHqa7ETJ6e/UVz2hDMIesKBmBh9/8GRLat4/pp6WAHoaiG5Hbpa', '/users/avatar_1659953363.png', NULL, NULL, 1, NULL, NULL, 1, '2022-07-14 09:34:54', '2022-08-08 10:09:23', NULL),
-(15, 'Sunita', 'sunita@gmail.com', NULL, '$2y$10$DcXZzEKvPOFkuGxk/tPbyu5KkZAmclUNXcz3oejEyBY0poJWsD4ga', '/users/chs-logo_1658121830.png', NULL, NULL, 1, NULL, NULL, 1, '2022-07-18 04:50:20', '2022-07-18 05:23:50', NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `contact_no`, `image`, `remember_token`, `permissionid`, `status`, `deleted_at`, `created_by`, `updated_by`, `created_at`, `updated_at`, `device_token`) VALUES
+(1, 'SuperAdmin', 'superamin@gmail.com', NULL, '$2y$10$fOtFfLEJ30EAC6U/0fOl6ed3ckJagB9llEzt1.FSIhIDTKHbQyBDC', '', '/users/avatar2_1656680911.png', NULL, 1, 1, NULL, NULL, 1, '2022-06-23 02:37:41', '2022-07-07 04:57:09', NULL),
+(2, 'Admin', 'admin@gmail.com', NULL, '$2y$10$VseD2y93UMRgObkxY0jad.P1zDV1k7sD9ZQ1peIh32Y4Zg8K4AgLu', '', '/users/avatar_1656680891.png', NULL, 1, 1, NULL, NULL, 1, '2022-06-23 04:09:09', '2022-07-01 07:38:11', NULL),
+(6, 'Rahul', 'rahul@gmail.com', NULL, '$2y$10$Rs56cvXtL7tE4jMTdnIC7OOpfnN98C/qjhHNi395j9wphRmqW39bO', '', '/users/avatar5_1656680878.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:27:55', '2022-07-07 23:21:31', NULL),
+(7, 'Yogesh', 'yogesh@gmail.com', NULL, '$2y$10$DLglPsQXdKjSYozgrZ.Pq.xojOxU4OwBzQfuLDWf40YumJmc3LfHW', '', '/users/avatar_1656680861.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:34:14', '2022-07-07 23:21:13', 'cvEAfRpouEW9Z10KkOODyh:APA91bFXcZUoa-KqP5iQFlVeH8jWfUNk2b6APAYYDOH5ynQYyNvqHUQi7ip3JpiK1XjY89C6cti38w2hDWfQ060-bTKIFqBh7sl1VhbzjmuGox4HEhLL3wZKSk57aHHgocW3kuGTE64K'),
+(8, 'Sachin', 'sachin@gmail.com', NULL, '$2y$10$eKB5xi4V4q.Er62pM4/4Guv6R6zmW17gv9FcPQMnW.RSmzZwYjabS', '', '/users/avatar4_1656680839.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:34:42', '2022-07-19 11:55:29', 'cvEAfRpouEW9Z10KkOODyh:APA91bFXcZUoa-KqP5iQFlVeH8jWfUNk2b6APAYYDOH5ynQYyNvqHUQi7ip3JpiK1XjY89C6cti38w2hDWfQ060-bTKIFqBh7sl1VhbzjmuGox4HEhLL3wZKSk57aHHgocW3kuGTE64K'),
+(9, 'sandeep', 'sandeep@gmail.com', NULL, '$2y$10$FJP7f.Ea1jW1Vsynl3r8e.nqsyPccdGd4bDK5zZUkLI/lG7EUqjqq', '', '/users/user8-128x128_1656680791.jpg', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 07:40:35', '2022-07-19 11:55:25', NULL),
+(12, 'yogesh chandra', 'yogeshchandra@gmail.com', NULL, '$2y$10$WhMdG3srZK3nc7Q/EFVY3e3Da5fQuGiosyvOFpVVv7FnY7tNOMTXe', '', 'avatar.png', NULL, NULL, 1, NULL, NULL, 12, '2022-07-14 07:14:41', '2022-07-14 07:48:08', NULL),
+(13, 'abhay', 'abhay@gmail.com', NULL, '$2y$10$gPrHqa7ETJ6e/UVz2hDMIesKBmBh9/8GRLat4/pp6WAHoaiG5Hbpa', '', '/users/avatar_1659953363.png', NULL, NULL, 1, NULL, NULL, 1, '2022-07-14 09:34:54', '2022-08-08 10:09:23', NULL),
+(15, 'Sunita', 'sunita@gmail.com', NULL, '$2y$10$DcXZzEKvPOFkuGxk/tPbyu5KkZAmclUNXcz3oejEyBY0poJWsD4ga', '', '/users/chs-logo_1658121830.png', NULL, NULL, 1, NULL, NULL, 1, '2022-07-18 04:50:20', '2022-07-18 05:23:50', NULL),
+(17, 'Ele', 'ele@gmail.com', NULL, '$2y$10$YM/MoNJtCUWWcm87TUwOVudw9UG4u5liYF901YpWyoAHhmSl9jQqu', '', 'avatar.png', NULL, NULL, 1, NULL, NULL, 17, '2022-08-09 04:44:33', '2022-08-09 04:44:33', NULL);
 
 -- --------------------------------------------------------
 
@@ -1291,7 +1333,7 @@ CREATE TABLE `usersbkup` (
 --
 
 CREATE TABLE `web_settings` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint(20) NOT NULL,
   `option_title` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `option_value` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -1306,7 +1348,7 @@ CREATE TABLE `web_settings` (
 --
 
 INSERT INTO `web_settings` (`id`, `option_title`, `option_value`, `created_by`, `updated_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'header', '{\"sitename\":\"Artist Booking\",\"tsclr\":\"1\",\"copyright\":\"Copyright \\u00a9 2022 Artist Booking. All rights reserved.\",\"faviconimage\":\"\\/websetting\\/favicon_1659590575.png\",\"logoimage\":null}', 1, NULL, NULL, '2022-07-04 03:37:30', '2022-08-04 05:22:55');
+(1, 'header', '{\"sitename\":\"Artist Booking\",\"tsclr\":\"1\",\"showreport\":\"Yes\",\"reportstitle\":\"Reports\",\"form_id\":[\"2\",\"1\"],\"copyright\":\"Copyright \\u00a9 2022 Artist Booking. All rights reserved.\",\"logoimage\":null,\"faviconimage\":\"\\/websetting\\/favicon_1659590575.png\"}', 1, NULL, NULL, '2022-07-04 03:37:30', '2022-08-09 07:42:47');
 
 -- --------------------------------------------------------
 
@@ -1396,6 +1438,12 @@ ALTER TABLE `booked_artists`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `booked_artist_dates`
+--
+ALTER TABLE `booked_artist_dates`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `booking_forms`
 --
 ALTER TABLE `booking_forms`
@@ -1482,6 +1530,18 @@ ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `web_settings`
+--
+ALTER TABLE `web_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1492,16 +1552,22 @@ ALTER TABLE `booked_artists`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `booked_artist_dates`
+--
+ALTER TABLE `booked_artist_dates`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `booking_forms`
 --
 ALTER TABLE `booking_forms`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `custom_fields`
 --
 ALTER TABLE `custom_fields`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `custom_fields_data`
@@ -1513,7 +1579,7 @@ ALTER TABLE `custom_fields_data`
 -- AUTO_INCREMENT for table `forms`
 --
 ALTER TABLE `forms`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `inventories`
@@ -1538,6 +1604,18 @@ ALTER TABLE `menuses`
 --
 ALTER TABLE `roles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `web_settings`
+--
+ALTER TABLE `web_settings`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables

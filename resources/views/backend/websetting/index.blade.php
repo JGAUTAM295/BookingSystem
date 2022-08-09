@@ -2,7 +2,25 @@
 @section('pagetitle', 'Web Setting')
 
 @section('head')
+<!-- Select2 -->
+<link rel="stylesheet" href="{{ URL::asset('assests/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ URL::asset('assests/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 <style>
+  .select2-container--default .select2-selection--multiple {
+    background-color: transparent!important;
+    border: 1px solid #6c757d!important;
+    color: #fff!important;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #3f6791!important;
+    border-color: #3f6791!important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff!important;
+}
+input.select2-search__field::placeholder {
+    color: #fff!important;
+}
   .img_wrp {
     display: inline-block;
     position: relative;
@@ -81,7 +99,10 @@ button.close {
                         </div>
                         @endif
                         <div class="form-group">
-                          <input type="file" name="logoimage" placeholder="Choose image" id="image">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile"  name="logoimage">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                          </div>
                           @error('image')
                           <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                           @enderror
@@ -103,7 +124,10 @@ button.close {
                         </div>
                         @endif
                         <div class="form-group">
-                          <input type="file" name="faviconimage" placeholder="Choose image" id="image">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile2" name="faviconimage">
+                            <label class="custom-file-label" for="customFile2">Choose file</label>
+                          </div>
                           @error('image')
                           <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                           @enderror
@@ -131,6 +155,36 @@ button.close {
                 <div class="row mb-3">
                     <div class="col-md-2">
                         <div class="form-group">
+                          <label for="inputReports">Reports Menu <span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-offset-2">
+                      <div class="form-group">
+                        <div class="custom-radio">
+                          <input type="radio" id="showreportYes" class="showreport" name="showreport" value="Yes" @if($header['showreport'] == 'Yes') checked @endif>
+                          <label for="showreportYes">Yes</label>
+                          <input type="radio" id="showreportNo" class="showreport" name="showreport" value="No"  @if($header['showreport'] == 'No') checked @endif>
+                          <label for="showreportNo">No</label><br>
+                        </div>
+                        
+                        <div id="formYes" class="form-group mt-2" @if($header['showreport'] == 'Yes') style="display:block;" @else style="display:none;" @endif>
+                          <label for="inputReports">Report Menu Label</label>
+                          <input type="text" id="inputReports" class="form-control mb-1" name="reportstitle" value="{{$header['reportstitle'] ?? ''}}">
+                          <br>
+                            <label for="inputReports">Select Form Report</label>
+                            <select id="form_id" name="form_id[]" id="inputFormid" class="form-control select2" multiple="multiple" data-placeholder="Select one" style="width: 100%;">
+                            @foreach($forms as $form)
+                              <option value="{{$form->id}}" {{ (in_array($form->id, $header['form_id'])) ? 'selected' : '' }} >{{$form->title}}</option>
+                            @endforeach
+                            </select>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
                           <label for="inputName">CopyRight <span class="text-danger">*</span></label>
                         </div>
                     </div>
@@ -140,7 +194,6 @@ button.close {
                         </div>
                     </div>
                 </div>
-            
             </div>
             <!-- /.card-body -->
           </div>
@@ -160,8 +213,27 @@ button.close {
 @endsection
 
 @section('footerscript')
+<!-- Select2 -->
+<script src="{{ URL::asset('assests/plugins/select2/js/select2.full.min.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function () {
+  
+  $(".showreport").click(function(){
+    if($(this).val() == 'Yes')
+    {
+      $('#form'+$(this).val()).show();
+    }
+    else
+    {
+      $('#formYes').hide();
+    }
+
+  });
+
+
+  //Initialize Select2 Elements
+  $('.select2').select2();
+
   $(".close").click(function () {
     var type = $(this).attr('data-type');
     $.ajax({

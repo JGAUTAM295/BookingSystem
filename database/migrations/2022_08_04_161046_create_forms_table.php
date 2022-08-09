@@ -17,6 +17,8 @@ class CreateFormsTable extends Migration
             $table->id();
             $table->integer('user_id')->unsigned();
             $table->string('title');
+            $table->string('showemail');
+            $table->string('sender_email')->nullable();
             $table->tinyInteger('status')->length(4);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

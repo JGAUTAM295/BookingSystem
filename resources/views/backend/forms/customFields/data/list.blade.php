@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3>Custom Field Data @if(in_array('customFieldsData.create', $groupsWithRoles))<a href="{{ route('customFieldsData.create', $customFields->id) }}"><button class="btn btn-primary">Add Custom Field Data</button></a> <a href="{{ route('custom-fields.index') }}"><button class="btn btn-success">Back</button></a>@endif</h3>
+            <h3>Custom Field Data @if(in_array('customFieldsData.create', $groupsWithRoles))<a href="{{ route('customFieldsData.create', $customFields->id) }}"><button class="btn btn-primary">Add Custom Field Data</button></a> <a href="{{ url()->previous() }}"><button class="btn btn-success">Back</button></a>@endif</h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">

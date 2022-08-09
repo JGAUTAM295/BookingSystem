@@ -38,10 +38,32 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+    // public function getRouteList()
+
+    // {
+    
+    //     $routeList = \Route::getRoutes();
+    
+    
+    //     dd($routeList);	
+    
+    // }
+
+    
     public function index()
     {
         $role = Role::findOrFail(Auth::user()->roles->first()->id);
         $groupsWithRoles = $role->getPermissionNames()->toArray();
+        // $routes = collect(\Route::getRoutes())->map(function ($route) { 
+        //     return $route->uri(); 
+        // });
+
+        // $routeList = \Route::getRoutes()->get();
+        // dd($routes);
+        // die;
+
+        
 
         $count_BookingForms = BookingForms::count();
 
@@ -833,7 +855,6 @@ class DashboardController extends Controller
         
         return view('backend.contact.index', compact('groupsWithRoles'));
     }
-    
     
     public function php_curl($url)
     {

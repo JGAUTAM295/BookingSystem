@@ -113,7 +113,7 @@ class CustomFieldsController extends Controller
         $customFields = CustomFields::find($id);
 
         $customFieldsdata = CustomFieldsData::where('cf_id', $customFields->id)->orderBy('id','DESC')->get();
-        return view('backend.customFields.data.list',  [ 'customFields' => $customFields, 'customFieldsdata' => $customFieldsdata, 'groupsWithRoles' => $groupsWithRoles ]);
+        return view('backend.forms.customFields.data.list',  [ 'customFields' => $customFields, 'customFieldsdata' => $customFieldsdata, 'groupsWithRoles' => $groupsWithRoles ]);
     }
 
     /**

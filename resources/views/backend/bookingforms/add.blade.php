@@ -70,12 +70,13 @@
 
                           @elseif($cf->input_field_type == 'Artist')
                           
-                          <select id="input{{ucwords($cf->slug) ?? ''}}" class="form-control custom-select" name="{{$cf->slug.'='.$cf->id ?? ''}}" @if($cf->input_required != "") required @endif>
+                          <select id="input{{ucwords($cf->slug) ?? ''}}" class="form-control custom-select" data-formid="{{$form->id ?? ''}}" data-label="{{ucwords($cf->name) ?? ''}}" name="{{$cf->slug.'='.$cf->id ?? ''}}" @if($cf->input_required != "") required @endif>
                             <option selected disabled>Select one</option>
                             @foreach(App\Models\CustomFields::getUserByRole($cf->input_artist) as $val)
                             <option value="{{$val->id ?? ''}}">{{ucwords($val->name) ?? ''}}</option>
                             @endforeach
                           </select>
+                          <div id="errormsginput{{ucwords($cf->slug) ?? ''}}"></div>
 
                           @elseif($cf->input_field_type == 'Textarea')
                           
@@ -114,6 +115,7 @@
                         </div>
                         @endforeach
                       @endif
+                     
                     </div>
                 </div> 
             </div>
@@ -127,6 +129,7 @@
           <a href="{{ route('booking-forms.index') }}" class="btn btn-secondary">Cancel</a>
           <input type="submit" value="Create new booking" class="btn btn-success float-right">
         </div>
+        
       </div>
       </form>
     </section>
@@ -141,8 +144,35 @@
 <script type="text/javascript">
     $(document).ready(function() {
       //Date picker
-        $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-    
+      $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+      $('.custom-select').change(function() {
+        console.log($(this).attr('id'));
+        console.log($(this).val());
+        var divid = $(this).attr('id');
+        $.ajax({
+          type: "POST",
+          url: '{{route("booking.artistbooked")}}',
+          data: {
+            form_id:$(this).attr('data-formid'), 
+            id:$(this).val(),
+            label:$(this).attr('data-label'),
+            eventdate:($('.datetimepicker-input').val())
+          },
+          headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+          },
+          success: function(response)
+          {
+            console.log(response);
+            if(response.status == 'true')
+            {
+              $("#errormsg"+divid).empty().append('<div class="alert alert-danger mt-2">'+response.data+'</div>').delay(5000).fadeOut(2000);    ;
+            }
+              
+           }
+        });
+      });
     });
 </script>
 @endsection

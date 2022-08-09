@@ -6,6 +6,11 @@ use App\Models\adminMail;
 use App\Models\MenuItem;
 use App\Models\Menus;
 use App\Models\User;
+use App\Models\Forms;
+use App\Models\BookingForms;
+use App\Models\BookedArtist;
+use App\Models\CustomFields;
+use App\Models\CustomFieldsData;
 use App\Models\Equipment;
 use App\Models\EquipmentIssueLogging;
 use App\Models\Inventory;
@@ -14,7 +19,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Auth;
+use Auth, Crypt;
 
 class Helper {
     
@@ -104,8 +109,180 @@ class Helper {
                 echo '</li>';
             }
         }
+
+        $res = WebSetting::where('option_title','header')->first();
+        $resmenu = json_decode($res->option_value, true);
+
+        if($resmenu['showreport'] == 'Yes') {
+            echo '<li class="nav-item"><a href="#" class="nav-link">
+            <i class="nav-icon fas fa-chart-pie"></i><p>'.$resmenu['reportstitle'].'<i class="fas fa-angle-left right"></i>
+            </p></a>
+            <ul class="nav nav-treeview">';
+           
+            foreach($resmenu['form_id'] as $formid)
+            {
+                $formdata = Forms::where([['id', $formid], ['status', 1]])->first();
+                if(!empty($formdata))
+                {
+                    echo '<li class="nav-item">
+                    <a href="'.route('booking-forms.report', Crypt::encrypt($formdata->id)).'" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>'.$formdata->title.'</p></a></li>';
+                }
+                
+            }
+
+            echo '</ul></li>';
+        }
+
     }
-    
+    // Send Mail For Booking Forms & Forms
+    public static function sendMail($email, $subject, $title, $lastID) 
+    {
+        if(!empty(Helper::websetting('sitename')))
+        {
+          $sitename = Helper::websetting('sitename');
+        }
+        else
+        {
+            $sitename = "Booking";
+        }
+        
+        $bkf = BookingForms::find($lastID);
+        $bkf_user = User::where([['id', $bkf->user_id],['status', '1']])->first();
+        $jsonbookingform = json_decode($bkf->form_info, true); 
+
+        if(Auth::user()->hasRole('admin|Super-Admin'))
+        {
+            $form = Forms::where('id', $bkf->form_id)->orderBy('id','DESC')->first();
+        }
+        else
+        {
+            $form = Forms::where('id', $bkf->form_id)->where('user_id', Auth::user()->id)->first();
+        }
+        
+        $cfs = CustomFields::where([['form_id', $bkf->form_id], ['status', '1']])->orderBy('order_no','ASC')->get();
+
+        $headers = '';
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= 'From: IMES <info@booking.com>' . "\r\n";
+        $message  = '<!DOCTYPE html><html><head><title>'.$sitename.' | Booking </title></head><body>';
+        $message .= '<table width=100% border=0><tr><td>';
+        $message .= '<tr><td colspan=2 style=position:absolute;left:350;top:60;><h2><font color = #346699>'.$sitename.'</font><h2></td></tr>';
+        $message .= '<tr><td colspan=2><br/><br/><br/><strong>Hello,</strong></td></tr>';
+        foreach($cfs as $cf)
+        {
+            $colname = $cf->slug.'='.$cf->id;
+            if(!empty($jsonbookingform[$colname]))
+            {
+                if($cf->input_field_type == 'Artist'){
+                    $user = User::where([['id',$jsonbookingform[$colname]],['status', '1']])->first();
+
+                    if(!empty($user))
+                    {
+                        $message .= '<tr><td colspan=2><br/><font size=3><b>'.ucwords($cf->name).': </b>'.ucwords($user->name).'</font></td></tr>';
+                    }
+
+                }
+                else
+                {
+                    $message .= '<tr><td colspan=2><br/><font size=3><b>'.ucwords($cf->name).': </b>'.ucwords($jsonbookingform[$colname]).'</font></td></tr>';
+                    // echo '<pre>'; print_r(.' => '.$jsonbookingform[$colname]); echo '</pre>';
+                }
+                
+            }
+
+            
+        }
+        
+        $message .= '<tr><td colspan=2><br/><br/><font size=3><b>Best regards,</b><br>Booking TEAM</font></td></tr></table></body></html>';
+        
+        if(!empty($form->sender_email))
+        {
+            if(mail($email, $subject, $message, $headers))
+            {
+                $newcf = New ContactForm();
+                $newcf->user_id = $form->user_id;
+                $newcf->title = $title;
+                $newcf->message = 'new booking';
+                $newcf->email_msg = $message;
+                $newcf->type = 'new_booking';
+                $newcf->created_by = Auth::user()->id;
+                            
+                if($newcf->save())
+                {
+                    $notification = New Notification();
+                    $notification->user_id = $form->user_id;
+                    $notification->title = $title;
+                    $notification->description = 'You have received new booking!';
+                    $notification->icon = urldecode(url('public'.Helper::websetting('faviconimage')));
+                    $notification->lastid = $lastID;
+                    $notification->type = 'new_booking';
+                    $notification->read_at = '0';
+                    $notification->created_by = Auth::user()->id;
+                    $notification->save();
+
+                    $buser = User::where([['id', $form->user_id],['status', '1']])->first();
+                    
+                    if(!empty($buser->device_token))
+                    {
+                        Helper::fcmNotification($buser->device_token, 'You have received new booking!');
+                    }
+                    
+                    return true;
+                }
+            }
+        }
+        else
+        {
+            foreach($cfs as $cf)
+            {
+                $colname = $cf->slug.'='.$cf->id;
+                if(!empty($jsonbookingform[$colname]))
+                {
+                    if($cf->input_field_type == 'Artist')
+                    {
+                        $user = User::where([['id', $jsonbookingform[$colname]],['status', '1']])->first();
+                        if(!empty($user))
+                        {
+                            if(mail($user->email, $subject, $message, $headers))
+                            {
+                                $newcf = New ContactForm();
+                                $newcf->user_id = $user->id;
+                                $newcf->title = $title;
+                                $newcf->message = 'new booking';
+                                $newcf->email_msg = $message;
+                                $newcf->type = 'new_booking';
+                                $newcf->created_by = Auth::user()->id;
+                                
+                                if($newcf->save())
+                                {
+                                    $notification = New Notification();
+                                    $notification->user_id = $user->id;
+                                    $notification->title = $title;
+                                    $notification->description = 'You have received new booking!';
+                                    $notification->icon = urldecode(url('public'.Helper::websetting('faviconimage')));
+                                    $notification->lastid = $lastID;
+                                    $notification->type = 'new_booking';
+                                    $notification->read_at = '0';
+                                    $notification->created_by = Auth::user()->id;
+                                    $notification->save();
+                                    
+                                    if(!empty($user->device_token))
+                                    {
+                                        Helper::fcmNotification($user->device_token, 'You have received new booking!');
+                                    }
+                                    
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                } 
+            }
+        }
+    }
+
     // Send Mail For Equipment Issue 
     public static function sendMailJobOrder($staff, $subject, $request, $pageurl, $lastID) 
     {
@@ -115,7 +292,7 @@ class Helper {
         }
         else
         {
-            $sitename = "IMES";
+            $sitename = "Booking";
         }
         
         $subject = 'New Job Order ('. Equipment::find($request['equipment_id'])->title.') '.date('d M, Y h:i:s A');
@@ -184,7 +361,7 @@ class Helper {
         }
         else
         {
-            $sitename = "IMES";
+            $sitename = "Booking";
         }
             
         

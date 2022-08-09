@@ -11,7 +11,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3>Custom Field Data Detail <a href="{{ route('custom-fields.index') }}"><button class="btn btn-primary">Back</button></a></h3>
+            <h3>Custom Field Data Detail <a href="{{ url()->previous() }}"><button class="btn btn-primary">Back</button></a></h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -65,7 +65,7 @@
                     </div>
                   </div>
                   <div class="col-12">
-                    <a href="{{ route('custom-fields.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
                     <input type="submit" value="Update data" class="btn btn-success float-right">
                   </div>
                 </div>

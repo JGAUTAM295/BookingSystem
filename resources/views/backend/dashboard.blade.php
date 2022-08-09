@@ -154,76 +154,27 @@
           <div class="card-inner d-flex flex-column h-100">
             <div class="card-title-group mb-3">
               <div class="card-title me-1">
-                <h6 class="title">Top Selected Package</h6><br>
-                <p>In last 30 days top selected package.</p>
+                <h6 class="title">Top Selected Artists</h6><br>
+                <p>In last 30 days top selected artists.</p>
               </div>
-              <div class="card-tools mt-n1 me-n1">
-                <div class="drodown">
-                  <a href="#" class="dropdown-toggle dropdown-indicator btn btn-sm btn-outline-light btn-white" data-bs-toggle="dropdown">30 Days</a>
-                  <div class="dropdown-menu dropdown-menu-end dropdown-menu-xs">
-                    <ul class="link-list-opt no-bdr">
-                      <li><a href="#"><span>7 Days</span></a></li>
-                      <li><a href="#"><span>15 Days</span></a></li>
-                      <li><a href="#"><span>30 Days</span></a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+              <div class="card-tools mt-n1 me-n1"></div>
             </div>
             <div class="progress-list gy-3">
-              <div class="progress-wrap">
-                <div class="progress-text">
-                  <div class="progress-label">Strater Package</div>
-                  <div class="progress-amount">58%</div>
+            @if(count($getroles) != '0')
+                @foreach($getroles as $getrole)
+                @if(App\Models\BookedArtist::getartistbookcountbyrole($getrole->name) != '0')
+                <div class="progress-wrap">
+                  <div class="progress-text">
+                    <div class="progress-label">{{$getrole->name ?? ''}}</div>
+                    <div class="progress-amount">{{ App\Models\BookedArtist::getartistbookcountbyrole($getrole->name) ?? '0'}}%</div>
+                  </div>
+                  <div class="progress progress-md">
+                    <div class="progress-bar" data-progress="{{ App\Models\BookedArtist::getartistbookcountbyrole($getrole->name) ?? '0'}}" style="width: {{ App\Models\BookedArtist::getartistbookcountbyrole($getrole->name) ?? '0'}}%;background-color: {{$getrole->bgcolor  ?? '#000'}}"></div>
+                  </div>
                 </div>
-                <div class="progress progress-md">
-                  <div class="progress-bar" data-progress="58" style="width: 58%;"></div>
-                </div>
-              </div>
-              <div class="progress-wrap">
-                <div class="progress-text">
-                  <div class="progress-label">Honeymoon Package</div>
-                  <div class="progress-amount">43%</div>
-                </div>
-                <div class="progress progress-md">
-                  <div class="progress-bar bg-warning" data-progress="43" style="width: 43%;"></div>
-                </div>
-              </div>
-              <div class="progress-wrap">
-                <div class="progress-text">
-                  <div class="progress-label">Vacation Package</div>
-                  <div class="progress-amount">33%</div>
-                </div>
-                <div class="progress progress-md">
-                  <div class="progress-bar bg-azure" data-progress="33" style="width: 33%;"></div>
-                </div>
-              </div>
-              <div class="progress-wrap">
-                <div class="progress-text">
-                  <div class="progress-label">Continental Package</div>
-                  <div class="progress-amount">29%</div>
-                </div>
-                <div class="progress progress-md">
-                  <div class="progress-bar bg-pink" data-progress="29" style="width: 29%;"></div>
-                </div>
-              </div>
-              <div class="progress-wrap">
-                <div class="progress-text">
-                  <div class="progress-label">Spring Package</div>
-                  <div class="progress-amount">18.49%</div>
-                </div>
-                <div class="progress progress-md">
-                  <div class="progress-bar bg-orange" data-progress="18.49" style="width: 18.49%;"></div>
-                </div>
-              </div>
-              <div class="progress-wrap">
-                <div class="progress-text">
-                  <div class="progress-label">All suite Package</div>
-                  <div class="progress-amount">16%</div>
-                </div><div class="progress progress-md">
-                  <div class="progress-bar bg-teal" data-progress="16" style="width: 16%;"></div>
-                </div>
-              </div>
+              @endif
+              @endforeach
+              @endif
             </div>
           </div>
         </div>
@@ -288,19 +239,9 @@
           <div class="card-inner">
             <div class="card-title-group">
               <div class="card-title">
-                <h6 class="title">Artist Booking Chart</h6>
+                <h6 class="title">Booking Chart</h6>
               </div>
               <div class="card-tools">
-                <div class="drodown">
-                  <a href="#" class="dropdown-toggle dropdown-indicator btn btn-sm btn-outline-light btn-white" data-bs-toggle="dropdown">30 Days</a>
-                  <div class="dropdown-menu dropdown-menu-end dropdown-menu-xs">
-                    <ul class="link-list-opt no-bdr">
-                      <li><a href="#"><span>7 Days</span></a></li>
-                      <li><a href="#"><span>15 Days</span></a></li>
-                      <li><a href="#"><span>30 Days</span></a></li>
-                    </ul>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="traffic-channel">
@@ -321,7 +262,7 @@
                 <div class="traffic-channel-data">
                   <div class="title">
                     <span class="dot dot-lg sq" data-bg="#9cabff" style="background-color: {{$getrole->bgcolor  ?? '#000'}};"></span>
-                    <span>{{$getrole->name ?? ''}}</span></div><div class="amount">{{ App\Models\BookedArtist::getartistbookcountbyrole($getrole->name) ?? '0'}}</div>
+                    <span>{{$getrole->name ?? ''}}</span></div><div class="amount">{{ App\Models\BookedArtist::getartistbookcountbyrolemonthly($getrole->name) ?? '0'}}</div>
                 </div>
                 @endforeach
                 @endif

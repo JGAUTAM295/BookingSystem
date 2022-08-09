@@ -5,16 +5,18 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Http\Helpers\Helper;
 use App\Models\User;
 use App\Models\BookingForms;
 use App\Models\BookedArtist;
+use App\Models\BookedArtistDate;
 use App\Models\Forms;
 use App\Models\CustomFields;
 use App\Models\CustomFieldsData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Response, Auth, PDF, File;
+use Response, Auth, PDF, File, Crypt;
 
 class BookingFormsController extends Controller
 {
@@ -25,6 +27,40 @@ class BookingFormsController extends Controller
      */
     public function index()
     {
+        // $bkf = BookingForms::find('2');
+        // $jsonbookingform = json_decode($bkf->form_info, true); 
+
+        // if(Auth::user()->hasRole('admin|Super-Admin'))
+        // {
+        //     $form = Forms::where('id', $bkf->form_id)->orderBy('id','DESC')->first();
+        // }
+        // else
+        // {
+        //     $form = Forms::where('id', $bkf->form_id)->where('user_id', Auth::user()->id)->first();
+        // }
+        
+        // $cfs = CustomFields::where([['form_id', $bkf->form_id], ['status', '1']])->orderBy('order_no','ASC')->get();
+        // foreach($cfs as $cf)
+        // {
+        //     $colname = $cf->slug.'='.$cf->id;
+        //     if(!empty($jsonbookingform[$colname]))
+        //     {
+        //         if($cf->input_field_type == 'Artist'){
+        //             $user = User::find($jsonbookingform[$colname]);
+        //             echo '<pre>'; print_r($cf->name.' => '.$user->name); echo '</pre>';
+        //         }
+        //         else
+        //         {
+        //             echo '<pre>'; print_r($cf->name.' => '.$jsonbookingform[$colname]); echo '</pre>';
+        //         }
+                
+        //     }
+
+            
+        // }
+
+        
+        // die;
         if (Auth::check()) 
         {
             $role = Role::findOrFail(Auth::user()->roles->first()->id);
@@ -135,19 +171,45 @@ class BookingFormsController extends Controller
 
                     if(isset($colnamee)) 
                     {
-                        
-
                         if(!empty($arr[$colnamee])) {
+                            $dcf = CustomFields::where('input_field_type', 'Date')->where('status', '1')->orderBy('order_no','ASC')->get();
+                            $dcfcolnamee = $booking_date= '';
+                            if($dcf->isNotEmpty())
+                            {
+                                foreach($dcf as $dcf_date) 
+                                {
+                                    $dcfcolnamee = $dcf_date->slug.'='.$dcf_date->id;
+                
+                                    if(isset($dcfcolnamee)) 
+                                    {
+                                        if(!empty($arr[$dcfcolnamee])) 
+                                        {
+                                            $booking_date = $arr[$dcfcolnamee];
+                                        }
+                                        
+                                    }   
+                                }
+                            }
+
                             $BookedArtist = New BookedArtist();
-                            $BookedArtist->booking_id =$newForm->id;
+                            $BookedArtist->form_id = $request->form_id;
+                            $BookedArtist->booking_id = $newForm->id;
                             $BookedArtist->col_key = $colnamee;
                             $BookedArtist->artist_id = $arr[$colnamee];
+                            $BookedArtist->booking_date = $booking_date;
                             $BookedArtist->save();
                         }
                         
                     }   
                 }
-                
+            }
+            
+            $form = Forms::find($request->form_id);
+
+            if(!empty($form->sender_email))
+            {
+                $subject = 'New Booking ('. $form->title.') '.date('d M, Y h:i:s A');
+                $sendMail = Helper::sendMail($form->sender_email, $subject, $form->title, $newForm->id);
             }
             
             return redirect()->route('booking-forms.index')->withSuccess(__('Booking Form created successfully!'));
@@ -175,7 +237,7 @@ class BookingFormsController extends Controller
             $form = Forms::where('id', $id)->where('user_id', Auth::user()->id)->first();
         }
         
-        $cfs = CustomFields::where('status', '1')->orderBy('order_no','ASC')->get();
+        $cfs = CustomFields::where([['form_id', $id], ['status', '1']])->orderBy('order_no','ASC')->get();
         return view('backend.bookingforms.add', compact('form', 'cfs'));
     }
 
@@ -193,7 +255,7 @@ class BookingFormsController extends Controller
             $form = Forms::where('id', $id)->where('user_id', Auth::user()->id)->first();
         }
         
-        $cfs = CustomFields::where('status', '1')->orderBy('order_no','ASC')->limit('5')->get();
+        $cfs = CustomFields::where([['form_id', $id], ['status', '1']])->orderBy('order_no','ASC')->limit('5')->get();
        
         $bookingforms = BookingForms::select('id','form_info')->where('form_id', $id)->get();
        
@@ -236,7 +298,7 @@ class BookingFormsController extends Controller
             $form = Forms::where('id', $bookingform->form_id)->where('user_id', Auth::user()->id)->first();
         }
         
-        $cfs = CustomFields::where('status', '1')->orderBy('order_no','ASC')->get();
+        $cfs = CustomFields::where([['form_id', $bookingform->form_id], ['status', '1']])->orderBy('order_no','ASC')->get();
         
         $jsonbookingform = json_decode($bookingform->form_info, true); 
         return view('backend.bookingforms.edit', compact('groupsWithRoles', 'form', 'cfs', 'bookingform', 'jsonbookingform'));
@@ -347,10 +409,32 @@ class BookingFormsController extends Controller
                         // $arrd[] = array(
                         //     $colnamee => $arr[$colnamee]
                         // );
-                        if(!empty($arr[$colnamee])) {
+                        if(!empty($arr[$colnamee]))
+                        {
+                            $dcf = CustomFields::where('input_field_type', 'Date')->where('status', '1')->orderBy('order_no','ASC')->get();
+                            $dcfcolnamee = $booking_date= '';
+                            if($dcf->isNotEmpty())
+                            {
+                                foreach($dcf as $dcf_date) 
+                                {
+                                    $dcfcolnamee = $dcf_date->slug.'='.$dcf_date->id;
+                
+                                    if(isset($dcfcolnamee)) 
+                                    {
+                                        if(!empty($arr[$dcfcolnamee])) 
+                                        {
+                                            $booking_date = $arr[$dcfcolnamee];
+                                        }
+                                        
+                                    }   
+                                }
+                            }
+
                             $BookedArtist = BookedArtist::where('booking_id', $request->id)
                             ->where('col_key', $colnamee)->update([
-                                'artist_id' => $arr[$colnamee]
+                                'form_id' => $request->form_id,
+                                'artist_id' => $arr[$colnamee],
+                                'booking_date' => $booking_date
                             ]);
                         }
                         
@@ -360,6 +444,28 @@ class BookingFormsController extends Controller
                 }
 
                 
+            }
+
+            $dcf = CustomFields::where('input_field_type', 'Date')->where('status', '1')->orderBy('order_no','ASC')->get();
+            $dcfcolnamee = '';
+            if($dcf->isNotEmpty())
+            {
+                foreach($dcf as $dcf_date) 
+                {
+                    $dcfcolnamee = $dcf_date->slug.'='.$dcf_date->id;
+
+                    if(isset($dcfcolnamee)) 
+                    {
+                        if(!empty($arr[$dcfcolnamee])) 
+                        {
+                            $BookedArtistDate = BookedArtistDate::where('booking_id', $request->id)
+                            ->where('col_key', $dcfcolnamee)->update([
+                                'booking_date' => $arr[$dcfcolnamee]
+                            ]);
+                        }
+                        
+                    }   
+                }
             }
           
             return redirect()->route('booking-forms.list', $request->form_id)->withSuccess(__('Booking Form has been updated successfully!'));
@@ -382,6 +488,43 @@ class BookingFormsController extends Controller
         if($bookingForm->delete()){
             return back()->with('success', 'Booking Form has been deleted successfully!');
         }
+    }
+
+    //Booking For Reports
+    public function booking_report($id)
+    {
+        $id = Crypt::decrypt($id);
+        $role = Role::findOrFail(Auth::user()->roles->first()->id);
+        $groupsWithRoles = $role->getPermissionNames()->toArray();
+
+        if(Auth::user()->hasRole('admin|Super-Admin'))
+        {
+            $form = Forms::where('id', $id)->orderBy('id','DESC')->first();
+        }
+        else
+        {
+            $form = Forms::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        }
+        
+        $cfs = CustomFields::where([['form_id', $id], ['status', '1']])->orderBy('order_no','ASC')->limit('5')->get();
+       
+        $bookingforms = BookingForms::select('id','form_info')->where('form_id', $id)->get();
+       
+        $my_var = array();
+        foreach($bookingforms as $bookingform)
+        {
+            
+            $ccf = CustomFields::where('input_field_type', 'File')->where('status', '1')->orderBy('order_no','ASC')->get();
+            $form_info = json_decode($bookingform->form_info, true); // convert it to an array.
+           // $my_var['booking_id']  = $bookingform->id;
+
+            $firstItem = array('booking_id' => $bookingform->id);
+            $form_info =array_merge($firstItem, $form_info);
+            
+            $my_var[] = $form_info;
+        }
+
+        return view('backend.reports.list', compact('groupsWithRoles', 'form', 'cfs', 'my_var', 'bookingforms'));
     }
 
     public function booking_export($id)
@@ -469,5 +612,22 @@ class BookingFormsController extends Controller
             return response()->stream($callback, 200, $headers);
             
         }
+    }
+
+    public function artistbooked(Request $request) 
+    {
+        $artistbooked = BookedArtist::where([['artist_id', $request->id], ['form_id', $request->form_id]])->first();
+        
+        if($artistbooked)
+        {
+            $user = User::find($request->id);
+            
+            if(strtotime($request->eventdate) == strtotime($artistbooked->booking_date))
+            {
+                return response() -> json(['status' => 'true', 'data' => $request->label.' '.$user->name.' is already booked on this date! Please select another date!'], 200);
+            }
+
+        }
+        
     }
 }

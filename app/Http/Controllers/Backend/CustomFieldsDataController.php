@@ -31,7 +31,7 @@ class CustomFieldsDataController extends Controller
      */
     public function create($id)
     {
-        return view('backend.customFields.data.add', compact('id'));
+        return view('backend.forms.customFields.data.add', compact('id'));
     }
 
     /**
@@ -89,7 +89,7 @@ class CustomFieldsDataController extends Controller
         $customFields = CustomFields::find($id);
         $customFieldsData = CustomFieldsData::find($tdid);
 
-        return view('backend.customFields.data.edit', compact('customFields', 'customFieldsData'));
+        return view('backend.forms.customFields.data.edit', compact('customFields', 'customFieldsData'));
     }
 
     /**
@@ -111,7 +111,7 @@ class CustomFieldsDataController extends Controller
         $customFieldsData->status = $request->status;
         $customFieldsData->updated_by = Auth::user()->id;
    
-        if($customFieldsData -> save())
+        if($customFieldsData->save())
         {
             return redirect()->route('custom-fields.show', $request->route('id'))->with('success', $request->name.' Custom Field Data has been updated successfully!');
         }

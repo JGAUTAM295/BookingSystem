@@ -135,8 +135,45 @@
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      "buttons": [
+        {
+         extend: 'copy',
+         text: 'Copy',
+         exportOptions: {
+            columns: 'th:not(:last-child)'
+        }
+      },
+      {
+         extend: 'csv',
+         text: 'CSV',
+         exportOptions: {
+            columns: 'th:not(:last-child)'
+         }
+      },
+      {
+         extend: 'excel',
+         text: 'Excel',
+         exportOptions: {
+            columns: 'th:not(:last-child)'
+         }
+      }, 
+      {
+         extend: 'pdf',
+         text: 'PDF',
+         exportOptions: {
+            columns: 'th:not(:last-child)'
+         }
+      },
+      {
+         extend: 'print',
+         text: 'Print',
+         exportOptions: {
+            columns: 'th:not(:last-child)'
+         }
+      }, 
+    ]
+    })
+    .buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,

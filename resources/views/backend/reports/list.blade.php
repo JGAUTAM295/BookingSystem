@@ -1,26 +1,33 @@
 @extends('backend.layout.master')
-@section('pagetitle', 'Permissions List')
+@section('pagetitle', 'Reports')
 
 @section('head')
  <!-- DataTables -->
   <link rel="stylesheet" href="{{ URL::asset('assests/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ URL::asset('assests/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ URL::asset('assests/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+  <style>
+    .form-group input[type="file"] {
+      float: none!important;
+      width: 20%;
+    }
+  </style>
 @endsection
 
 @section('content')
-
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3>Permissions <a href="{{ route('permissions.create') }}"><button class="btn btn-primary">Add Permission</button></a></h3>
+            <h3>{{$form->title ?? ''}} Report
+              @if(in_array('booking-forms.export', $groupsWithRoles)) <a href="{{ route('booking-forms.export', $form->id) }}"><button class="btn btn-primary">Export</button></a> @endif
+              <a href="{{ route('dashboard') }}"><button class="btn btn-primary">Back</button></a>
+            </h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-              <li class="breadcrumb-item active">Permissions</li>
+              <li class="breadcrumb-item active">Reports</li>
             </ol>
           </div>
         </div>
@@ -34,43 +41,33 @@
           <div class="col-12">
           @include('backend.layout.messages')
             <div class="card">
-              <!-- <div class="card-header">
-                <h3 class="card-title">DataTable with default features</h3>
-              </div> -->
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped mt-3">
-                  <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Guard</th>
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    @if($permissions)
-                    @foreach($permissions as $permission)
-                  <tr>
-                    <td>{{ucwords($permission->name) ?? ''}}</td>
-                    <td class="project-state"><span class="badge badge-success">{{$permission->guard_name ?? ''}}</span></td>
-                    <td class="project-actions">
-                      <a class="btn btn-info btn-sm" href="{{ route('permissions.edit', $permission->id) }}">
-                          <i class="fas fa-pencil-alt">
-                          </i>
-                          Edit
-                      </a>
-                      <form method="POST" action="{{ route('permissions.destroy', $permission->id) }}" style="display: inline-block;">
-                        @csrf
-                        <input name="_method" type="hidden" value="DELETE">
-                        <button type="submit" class="btn btn-danger btn-sm show_confirm"><i class="fas fa-trash"></i>Delete</button>
-                      </form>
-                    </td>
-                  </tr>
-                  @endforeach
-                  @endif
-                </tfoot>
-                </table>
-              </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="example1" class="table table-bordered table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                @foreach($cfs as $cf)
+                                <th>{{$cf->name}}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                            $val = array();
+                            $count = 0;
+                            @endphp
+                            @foreach($my_var as $val)
+                            <tr>
+                                @foreach(array_slice($val, 0, 6) as $value)
+                                <td>{{$value}}</td>
+                                @endforeach
+                            @php $count++; @endphp
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -86,6 +83,8 @@
 @endsection
 
 @section('footerscript')
+
+
 <!-- DataTables  & Plugins -->
 <script src="{{ URL::asset('assests/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ URL::asset('assests/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -103,30 +102,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 
 <script type="text/javascript">
- 
-     $('.show_confirm').click(function(event) {
-          var form =  $(this).closest("form");
-          var name = $(this).data("name");
-          event.preventDefault();
-          swal({
-              title: `Are you sure you want to delete this permission?`,
-              text: "If you delete this, it will be gone forever.",
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-              buttons: ['No, cancel it!', 'Yes, I am sure!'],
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              form.submit();
-            }
-          });
-      });
-  
-</script>
 
-
-<script>
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
@@ -167,8 +143,7 @@
          }
       }, 
     ]
-    })
-    .buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -178,6 +153,12 @@
       "autoWidth": false,
       "responsive": true,
     });
-  });
+
+    $('#import_box').click(function() {
+        $('#importdiv').toggle();
+        return false;
+    });        
+   });
 </script>
+
 @endsection

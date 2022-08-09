@@ -45,6 +45,24 @@
                           </span>
                         @enderror
                       </div>
+
+                      <div class="form-group {{ $errors->has('showemail') ? 'has-error' : ''}}">
+                      <label for="inputSenderEmail">Sender Email <span class="text-danger">*</span></label>
+                        <div class="custom-radio">
+                          <input type="radio" id="showemailinputYes" class="showemailinput" name="showemail" value="Yes" @if($form->showemail == 'Yes') checked @endif>
+                          <label for="showreportYes">Yes</label>
+                          <input type="radio" id="showemailinputNo" class="showemailinput" name="showemail" value="No"  @if($form->showemail == 'No') checked @endif>
+                          <label for="showreportNo">No</label><br>
+                        </div>
+                        <div id="showemaildivYes" class="{{ $errors->has('sender_email') ? 'has-error' : ''}}" @if($form->showemail == 'Yes') style="display:block;" @else style="display:none;" @endif>
+                        <input type="text" id="inputSenderEmail" class="form-control" name="sender_email" placeholder="Enter sender emails" value="{{$form->sender_email ?? ''}}">
+                        @error('showemail')
+                        <span class="invalid-feedback" role="alert" style="display:block;">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                        </div>
+                      </div>
                  
                       <div class="form-group {{ $errors->has('status') ? 'has-error' : ''}}">
                         <label for="inputStatus">Status <span class="text-danger">*</span></label>
@@ -81,4 +99,18 @@
 @endsection
 
 @section('footerscript')
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".showemailinput").click(function(){
+      if($(this).val() == 'Yes')
+      {
+        $('#showemaildiv'+$(this).val()).show();
+      }
+      else
+      {
+        $('#showemaildivYes').hide();
+      }
+    });
+  });
+</script>
 @endsection

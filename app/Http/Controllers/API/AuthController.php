@@ -60,7 +60,7 @@ class AuthController extends BaseController
                     $success['id'] =  $auth->id;
                     $success['name'] =  $auth->name;
                     $success['email'] =  $auth->email;
-                    $success['image'] =  url('/').asset($auth->image);
+                    $success['image'] =  asset($auth->image);
            
                     return $this->handleResponse($success, 'User logged-in!');
                 } 
@@ -80,10 +80,12 @@ class AuthController extends BaseController
             'email' => 'required|email',
             'password' => 'required',
             'confirm_password' => 'required|same:password',
+            'contact_no' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'roles' => 'required',
         ]);
    
         if($validator->fails()){
-            return $this->handleError($validator->errors()->first());       
+            return $this->handleError($validator->errors());       
         }
    
         $input = $request->all();

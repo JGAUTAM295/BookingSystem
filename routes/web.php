@@ -166,6 +166,8 @@ Route::get('logout', [
         Route::resource('booking-forms', Backend\BookingFormsController::class);
         Route::get('/booking-forms/entries/{id}', 'Backend\BookingFormsController@booking_entries')->name('booking-forms.list');
         Route::get('/booking-forms/export/{id}', 'Backend\BookingFormsController@booking_export')->name('booking-forms.export');
+        Route::get('/reports/{id}', 'Backend\BookingFormsController@booking_report')->name('booking-forms.report');
+        Route::post('/artistbooked', 'Backend\BookingFormsController@artistbooked')->name('booking.artistbooked');
 
         Route::resource('forms', Backend\FormsController::class);
         //Route::resource('custom-fields', Backend\CustomFieldsController::class);

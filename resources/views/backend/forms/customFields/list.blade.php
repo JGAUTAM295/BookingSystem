@@ -17,7 +17,7 @@
           <div class="col-sm-6">
             <h3>Custom Fields 
                @if(in_array('custom-fields.create', $groupsWithRoles))<a href="{{ route('custom-fields.create', $form->id) }}"><button class="btn btn-primary">Add Custom Field</button></a>@endif
-              <a href="{{ route('forms.show', $form->id) }}"><button class="btn btn-primary">Back</button></a></h3>
+              <a href="{{ route('forms.index') }}"><button class="btn btn-primary">Back</button></a></h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">

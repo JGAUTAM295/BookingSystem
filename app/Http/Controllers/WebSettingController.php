@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use App\Models\Forms;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Response, Auth, PDF, File;
@@ -17,11 +20,30 @@ class WebSettingController extends Controller
      */
     public function index()
     {
-        $data = WebSetting::where('option_title','header')->first();
-        
-        $header = json_Decode($data->option_value, true);
-        
-        return view('backend.websetting.index', compact('data', 'header'));
+        if (Auth::check()) 
+        {
+            $role = Role::findOrFail(Auth::user()->roles->first()->id);
+            $groupsWithRoles = $role->getPermissionNames()->toArray();
+            
+            if(Auth::user()->hasRole('admin|Super-Admin'))
+            {
+                $forms = Forms::orderBy('id','DESC')->where('status', '1')->get();
+            }
+            else
+            {
+                $forms = Forms::where('user_id', Auth::user()->id)->where('status', '1')->orderBy('id','DESC')->get();
+            }
+
+            $data = WebSetting::where('option_title','header')->first();
+            
+            $header = json_Decode($data->option_value, true);
+            
+            return view('backend.websetting.index', compact('data', 'header', 'forms', 'groupsWithRoles'));
+        }
+        else
+        {
+            return redirect()->route('dashboard');
+        }
     
     }
 
@@ -102,8 +124,8 @@ class WebSettingController extends Controller
             $favicon_image = $header['faviconimage'];
         }
         
-        $jsonEquipment = json_encode($request->except('_method', 'id', '_token'));
-        $jsonDecode = json_decode($jsonEquipment, true);
+        $jsonweb = json_encode($request->except('_method', 'id', '_token'));
+        $jsonDecode = json_decode($jsonweb, true);
         
         $jsonDecode['logoimage'] = $logo_image;
         $jsonDecode['faviconimage'] = $favicon_image;
