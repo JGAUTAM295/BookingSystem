@@ -26,24 +26,22 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
     Route::post('register', 'API\AuthController@register')->name('register');
     Route::post('password/email', 'API\AuthController@forgotPassword')->name('forgotPassword');
     Route::post('password/code/check', 'API\AuthController@codecheck')->name('codecheck');
-    
+    // Route::get('profile', 'API\StaffController@profile')->name('profile');
     // After Login Routes
+    
     Route::middleware('auth:sanctum')->group(function ()
     {
-        // Route::resource('work_order', Backend\WorkOrderController::class);
-        Route::get('equipment_issues', 'API\EquipmentIssueController@equipment_issues')->name('equipmentIssuesList');
-        Route::get('get_equipments', 'API\EquipmentIssueController@get_equipments')->name('getEquipments');
-        Route::get('get_staff', 'API\EquipmentIssueController@get_staff')->name('getStaff');
-        Route::get('get_customers', 'API\EquipmentIssueController@get_customers')->name('getCustomers');
-        Route::get('get_departments', 'API\EquipmentIssueController@get_departments')->name('getDepartments');
-        Route::post('create_equipment_issues', 'API\EquipmentIssueController@create_equipment_issues')->name('equipmentIssuesCreate');
+        Route::get('form_list', 'API\FormsAPIController@form_list')->name('form_list');
+        Route::post('form_store', 'API\FormsAPIController@form_store')->name('form_store');
+        Route::get('booking_list', 'API\BookingController@booking_list')->name('booking_list');
+        Route::get('booking_detail/{id}', 'API\BookingController@booking_detail')->name('booking_detail');
+        Route::post('get_booking_by_date', 'API\BookingController@booking_by_date')->name('booking_by_date');
+        Route::get('bookingtest/{id}', 'API\FormsAPIController@bookingtest')->name('bookingtest');
+        Route::post('artist_booked', 'API\ArtistController@artist_booked')->name('artist_booked');
+
         
-        Route::get('work_order_list', 'API\StaffController@workOrderList')->name('workOrderList');
-        Route::post('create_work_order', 'API\StaffController@create_work_order')->name('workOrderCreate');
-        Route::post('update_workorder', 'Backend\WorkOrderController@update_workorder')->name('update_workorder');
-        
-        Route::get('profile', 'API\StaffController@profile')->name('profile');
-        Route::post('change_password', 'API\StaffController@changePassword')->name('changePassword');
+        Route::get('profile', 'API\AccountController@profile')->name('profile');
+        Route::post('change_password', 'API\AccountController@changePassword')->name('changePassword');
         
         Route::get('notifications', 'API\NotificationController@index')->name('notifications');
         Route::get('notification/{id}', 'API\NotificationController@readnotification')->name('readnotification');

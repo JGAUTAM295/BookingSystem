@@ -27,40 +27,6 @@ class BookingFormsController extends Controller
      */
     public function index()
     {
-        // $bkf = BookingForms::find('2');
-        // $jsonbookingform = json_decode($bkf->form_info, true); 
-
-        // if(Auth::user()->hasRole('admin|Super-Admin'))
-        // {
-        //     $form = Forms::where('id', $bkf->form_id)->orderBy('id','DESC')->first();
-        // }
-        // else
-        // {
-        //     $form = Forms::where('id', $bkf->form_id)->where('user_id', Auth::user()->id)->first();
-        // }
-        
-        // $cfs = CustomFields::where([['form_id', $bkf->form_id], ['status', '1']])->orderBy('order_no','ASC')->get();
-        // foreach($cfs as $cf)
-        // {
-        //     $colname = $cf->slug.'='.$cf->id;
-        //     if(!empty($jsonbookingform[$colname]))
-        //     {
-        //         if($cf->input_field_type == 'Artist'){
-        //             $user = User::find($jsonbookingform[$colname]);
-        //             echo '<pre>'; print_r($cf->name.' => '.$user->name); echo '</pre>';
-        //         }
-        //         else
-        //         {
-        //             echo '<pre>'; print_r($cf->name.' => '.$jsonbookingform[$colname]); echo '</pre>';
-        //         }
-                
-        //     }
-
-            
-        // }
-
-        
-        // die;
         if (Auth::check()) 
         {
             $role = Role::findOrFail(Auth::user()->roles->first()->id);

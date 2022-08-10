@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 09, 2022 at 02:44 PM
+-- Generation Time: Aug 10, 2022 at 02:51 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.28
 
@@ -67,7 +67,9 @@ CREATE TABLE `booked_artists` (
 INSERT INTO `booked_artists` (`id`, `form_id`, `booking_id`, `col_key`, `artist_id`, `booking_date`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 'dancer=11', '15', '08/12/2022 4:18 PM', '2022-08-08 10:50:27', '2022-08-09 11:51:14'),
 (2, 1, 2, 'dancer=11', '15', '08/15/2022 4:20 PM', '2022-08-08 10:51:23', '2022-08-09 11:51:06'),
-(3, 1, 2, 'musician=12', '13', '08/15/2022 4:20 PM', '2022-08-08 10:51:23', '2022-08-09 11:51:06');
+(3, 1, 2, 'musician=12', '13', '08/15/2022 4:20 PM', '2022-08-08 10:51:23', '2022-08-09 11:51:06'),
+(26, 1, 17, 'dancer=11', '8', '08/13/2022 4:20 PM', '2022-08-10 11:58:48', '2022-08-10 11:58:48'),
+(27, 1, 17, 'musician=12', '17', '08/13/2022 4:20 PM', '2022-08-10 11:58:48', '2022-08-10 11:58:48');
 
 -- --------------------------------------------------------
 
@@ -118,7 +120,8 @@ INSERT INTO `booking_forms` (`id`, `user_id`, `form_id`, `form_info`, `created_b
 (2, 1, 1, '{\"i-want-this-artist-for-a=1\":\"Musical Performance\",\"event-date-time=2\":\"08\\/15\\/2022 4:20 PM\",\"name-of-event=3\":\"Dj Party\",\"venue-address=4\":\"Mohali\",\"event-attire=5\":\"Doesn\'t Really Matter\",\"your-full-name=6\":\"ABC\",\"comments=8\":\"fsdf\",\"dancer=11\":\"15\",\"musician=12\":\"13\"}', 1, 1, '2022-08-08 10:51:23', '2022-08-09 11:24:42'),
 (3, 1, 2, '{\"name=13\":\"test\",\"email=14\":\"test@gmail.com\"}', 1, NULL, '2022-08-09 11:07:20', '2022-08-09 11:07:20'),
 (4, 1, 2, '{\"name=13\":\"test\",\"email=14\":\"test@gmail.com\"}', 1, NULL, '2022-08-09 11:07:42', '2022-08-09 11:07:42'),
-(5, 1, 2, '{\"name=13\":\"test\",\"email=14\":\"test@gmail.com\"}', 1, NULL, '2022-08-09 11:08:19', '2022-08-09 11:08:19');
+(5, 1, 2, '{\"name=13\":\"test\",\"email=14\":\"test@gmail.com\"}', 1, NULL, '2022-08-09 11:08:19', '2022-08-09 11:08:19'),
+(17, 1, 1, '{\"i-want-this-artist-for-a=1\":\"Panel Discussion\",\"event-date-time=2\":\"08\\/13\\/2022 4:20 PM\",\"name-of-event=3\":\"Business Meeting\",\"venue-address=4\":\"pkl\",\"event-attire=5\":\"9\",\"your-full-name=6\":\"test\",\"dancer=11\":\"8\",\"musician=12\":\"17\",\"comments=8\":\"dadsddad\"}', 1, NULL, '2022-08-10 11:58:48', '2022-08-10 11:58:48');
 
 -- --------------------------------------------------------
 
@@ -812,7 +815,7 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 --
 
 CREATE TABLE `personal_access_tokens` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint(20) NOT NULL,
   `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -828,76 +831,14 @@ CREATE TABLE `personal_access_tokens` (
 --
 
 INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `created_at`, `updated_at`) VALUES
-(1, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '797d60338f39d2fb45c7abecbf624fc2147f67a37fd85d17f366979612597558', '[\"*\"]', '2022-07-06 07:30:41', '2022-07-06 07:25:03', '2022-07-06 07:30:41'),
-(2, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '3447231a17f922bd0fad9cdd7cbbe81431256704f4de79b4efaa8b7a84a64f83', '[\"*\"]', NULL, '2022-07-06 22:59:25', '2022-07-06 22:59:25'),
-(3, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'eddc195d1d50e01e1308e5d43969ae1868cdf82e82c2b16c3acfab9f46abf19f', '[\"*\"]', '2022-07-18 06:53:05', '2022-07-06 22:59:57', '2022-07-18 06:53:05'),
-(4, 'App\\Models\\User', 12, 'LaravelSanctumAuth', '4bc195188cd6e0186a40708e5b125fa63ef144351e639bb9ceef6b1c0c80bef0', '[\"*\"]', '2022-07-14 08:14:57', '2022-07-14 07:14:41', '2022-07-14 08:14:57'),
-(5, 'App\\Models\\User', 12, 'LaravelSanctumAuth', '3727d0ad3ed24bab219d5fedabefd330d990f36293d3457e81c7548d85e489a4', '[\"*\"]', NULL, '2022-07-14 07:38:53', '2022-07-14 07:38:53'),
-(6, 'App\\Models\\User', 12, 'LaravelSanctumAuth', 'f117f1ef66d346fd5d3758d37beb4c67b5cc792a9007a70ea76fb9b4ff3a3071', '[\"*\"]', NULL, '2022-07-14 07:39:58', '2022-07-14 07:39:58'),
-(7, 'App\\Models\\User', 12, 'LaravelSanctumAuth', '5b3a7f5ec10355b2a3c6d84350e5d1cff0c600540fe52a5f2abbe46395029137', '[\"*\"]', NULL, '2022-07-14 07:42:08', '2022-07-14 07:42:08'),
-(8, 'App\\Models\\User', 13, 'LaravelSanctumAuth', '1bb756976066f79deeac72ce31f96be75fbec4cd0ee119c803346ab1d65eeb7e', '[\"*\"]', '2022-07-14 09:59:41', '2022-07-14 09:37:31', '2022-07-14 09:59:41'),
-(9, 'App\\Models\\User', 14, 'LaravelSanctumAuth', 'ad8395c65fe6afe6306b4f8589e02cc8fcca570153ba5a37580cc452e56a3382', '[\"*\"]', NULL, '2022-07-18 04:43:53', '2022-07-18 04:43:53'),
-(10, 'App\\Models\\User', 14, 'LaravelSanctumAuth', '2018185a673250b778dbbcb4f551da992b41663bd7387b7d394d7a347066eee8', '[\"*\"]', '2022-07-18 04:48:39', '2022-07-18 04:44:22', '2022-07-18 04:48:39'),
-(11, 'App\\Models\\User', 15, 'LaravelSanctumAuth', 'b5bbb8f1c8343d49f56944feb4f05bbf594c4f387ea878dace9e6f6b70caef1c', '[\"*\"]', '2022-07-18 04:50:43', '2022-07-18 04:50:22', '2022-07-18 04:50:43'),
-(12, 'App\\Models\\User', 15, 'LaravelSanctumAuth', '455948ab6513d6b466761c1787b8e8b724516c245177362c53a007f29fdd6120', '[\"*\"]', '2022-07-18 05:11:06', '2022-07-18 04:50:48', '2022-07-18 05:11:06'),
-(13, 'App\\Models\\User', 15, 'LaravelSanctumAuth', '705f00804444306b79995ea59d7b23e9e0a6794e37e69d74391524184bfb8d7b', '[\"*\"]', '2022-07-18 06:28:48', '2022-07-18 05:18:27', '2022-07-18 06:28:48'),
-(14, 'App\\Models\\User', 15, 'LaravelSanctumAuth', '58aa8b6e50a1807b63d6d96b8f34242d1ee65b55a69a9ab3637e7fb2dc9380d3', '[\"*\"]', NULL, '2022-07-18 05:24:27', '2022-07-18 05:24:27'),
-(15, 'App\\Models\\User', 15, 'LaravelSanctumAuth', '848fcb1d79aba1094b52ae0cb3a35715d7e6f07e37c595408a7e9f1e6486afd2', '[\"*\"]', '2022-07-18 05:26:49', '2022-07-18 05:24:54', '2022-07-18 05:26:49'),
-(16, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '90aa262f5fbc45013175adc2deb23169b4a24c9ff57d4cf29f027991d32fa0e2', '[\"*\"]', NULL, '2022-07-18 07:30:01', '2022-07-18 07:30:01'),
-(17, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '7a0030f86b69efdb25ed0ef5d6ab76abdae289cfa1092d6082863783c61a1deb', '[\"*\"]', NULL, '2022-07-18 09:12:48', '2022-07-18 09:12:48'),
-(18, 'App\\Models\\User', 8, 'LaravelSanctumAuth', 'b3c64e17fbb740bb00acf33caf7919c5142f0e0657b0cf0075662f2fd1f47850', '[\"*\"]', NULL, '2022-07-18 09:27:14', '2022-07-18 09:27:14'),
-(19, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '7c78f4c23d8a67d6768c54fa257542df6b65610c7efd934e15693a91eafc410e', '[\"*\"]', '2022-07-18 09:44:58', '2022-07-18 09:27:46', '2022-07-18 09:44:58'),
-(20, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'e8a02cbbe7bd72a104c2a44a48c4e986e93607801242eabc7333d37e92c39b5f', '[\"*\"]', '2022-07-18 09:57:27', '2022-07-18 09:46:36', '2022-07-18 09:57:27'),
-(21, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '9f82f23207551478f1b8aece5419ca2a1a207e1722d335655499cf91e2209935', '[\"*\"]', '2022-07-18 12:14:09', '2022-07-18 09:53:02', '2022-07-18 12:14:09'),
-(22, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '9b87f7eba39b5171d5bb8fa753e95244dddf3a61a595ce304fc7ec87e8299463', '[\"*\"]', '2022-07-18 10:01:26', '2022-07-18 10:01:01', '2022-07-18 10:01:26'),
-(23, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '0cf77ba7208fde7f47110700bbb68c5a1a64c74b9a950569902e87717fd5dcea', '[\"*\"]', '2022-07-18 10:28:04', '2022-07-18 10:06:21', '2022-07-18 10:28:04'),
-(24, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'ac22d4d7c7350e6331cff17b52fd28864833dbca84cfea79769db93d0ed81118', '[\"*\"]', '2022-07-18 11:20:47', '2022-07-18 10:22:16', '2022-07-18 11:20:47'),
-(25, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'eb925592ba77ca37714a4280749f0eaf37c212b41996c60a9fb7ac9be5dc61ec', '[\"*\"]', '2022-07-19 07:32:49', '2022-07-19 04:30:46', '2022-07-19 07:32:49'),
-(26, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '312d488937eea2fcb5b54edc4e677f3c2b03672b2dfb613cc53226e45c4f47dc', '[\"*\"]', '2022-07-19 07:28:45', '2022-07-19 07:28:44', '2022-07-19 07:28:45'),
-(27, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '034b02cd6b7c28916a5526656080b66bad5766a70d5d1ad5c9488718ddd97a4b', '[\"*\"]', '2022-07-19 10:39:00', '2022-07-19 07:33:21', '2022-07-19 10:39:00'),
-(28, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '3b6a1cd5256d9226abfa83e9cb9c2a51872e166e9b9eedca2d9682fcd96640c4', '[\"*\"]', NULL, '2022-07-19 10:20:21', '2022-07-19 10:20:21'),
-(29, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '74f4631344c4edc62c7b34730bdeaa9a416da85c11a4fbd2a697df21fbbe0a08', '[\"*\"]', NULL, '2022-07-19 10:21:13', '2022-07-19 10:21:13'),
-(30, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c04043867e59f0f9ee8f225579eb4ff736a92e796bcde9a9f33dd6b6327d8122', '[\"*\"]', NULL, '2022-07-19 10:38:06', '2022-07-19 10:38:06'),
-(31, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'ee0f04305ad3ec2c74bc457e03a7a1371e432f8c7931fe4544e0fdb38a9ea7ae', '[\"*\"]', '2022-07-19 11:58:25', '2022-07-19 10:55:00', '2022-07-19 11:58:25'),
-(32, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '187459d03e0be567d5adc31107007f8124757c0c747bfbfc6f51db0b191f2db6', '[\"*\"]', NULL, '2022-07-19 11:04:03', '2022-07-19 11:04:03'),
-(33, 'App\\Models\\User', 9, 'LaravelSanctumAuth', '1383bec699872acdd5075e7328d8d715765388433500699c1a5f1efde9f8df6f', '[\"*\"]', '2022-07-19 11:54:57', '2022-07-19 11:52:52', '2022-07-19 11:54:57'),
-(34, 'App\\Models\\User', 8, 'LaravelSanctumAuth', 'bdbc522019495030d3f7a8e94fe98e262e5b7eeab13508b0ae89bc4f94020250', '[\"*\"]', '2022-07-19 12:47:23', '2022-07-19 11:55:29', '2022-07-19 12:47:23'),
-(35, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '200a8871b137e7229a276abb85af783a6aa4cc1fe52c3f813027084244c1bf07', '[\"*\"]', NULL, '2022-07-19 15:37:53', '2022-07-19 15:37:53'),
-(36, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '559fcab9a150921dcecfb20048a9013db70eeefd0a15f1009e189c1892e702dd', '[\"*\"]', NULL, '2022-07-20 04:27:22', '2022-07-20 04:27:22'),
-(37, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '063e52b077c99a806dd45f1cfcab2d237215a8cf62d33ebc4cd6ccf2a9d1917a', '[\"*\"]', NULL, '2022-07-20 05:13:27', '2022-07-20 05:13:27'),
-(38, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '9f0d21fb9788646a9f900c3c51cd00638925f9b1d32061d7f8821d47988b6d8d', '[\"*\"]', NULL, '2022-07-20 15:46:19', '2022-07-20 15:46:19'),
-(39, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'ff912a1c2d8efaaf13e687b3a655a110b837dec82f06298f8fc897a8ef1b3f2d', '[\"*\"]', NULL, '2022-07-21 05:25:00', '2022-07-21 05:25:00'),
-(40, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c43b3504aee380f94e050c997aef788879e83c606c0b200121e7f32df5370c08', '[\"*\"]', NULL, '2022-07-21 15:09:08', '2022-07-21 15:09:08'),
-(41, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '6f4779bbf62ec75758fc5151ad77b1132cb608ed9ff70b456127c33e18510107', '[\"*\"]', NULL, '2022-07-21 17:22:37', '2022-07-21 17:22:37'),
-(42, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '56c53f3f6e4651d133584ee2cb8e4a63d8df236eb7eb96e697f5dab38f16b475', '[\"*\"]', NULL, '2022-07-25 20:16:25', '2022-07-25 20:16:25'),
-(43, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c04662a20f6bd78ef708291e46c303312b472c38a6a4ece1102540860cf5b3e3', '[\"*\"]', NULL, '2022-07-26 12:19:37', '2022-07-26 12:19:37'),
-(44, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'd94da436adba50373e3648046c8b3b083542b9eb14d97b5ee7b83c8e28f09046', '[\"*\"]', NULL, '2022-07-28 15:00:45', '2022-07-28 15:00:45'),
-(45, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'fcab60cda0c94b266fff33fd38b65364dcfef467ee7f2ef94425c85daf6ac732', '[\"*\"]', NULL, '2022-08-02 05:58:50', '2022-08-02 05:58:50'),
-(46, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'f7c2ff7c1e3ddbbf8ebfc5b2545f711cd7fd1e5ab48ed6ecba37ce866df46c14', '[\"*\"]', NULL, '2022-08-02 05:59:15', '2022-08-02 05:59:15'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c566124c5dddf6008c219dcb634170d4ed41d627742149168231977ac5873e9b', '[\"*\"]', NULL, '2022-08-02 19:06:02', '2022-08-02 19:06:02'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'f9abd5dc4714b282b240a613bb24f439fcc8bcb4ab5c759bd57fd60a7a17dcad', '[\"*\"]', NULL, '2022-08-02 20:01:07', '2022-08-02 20:01:07'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c555715d28cabe41f40553731319e72c0f8e7cc2079fe5a04dbd35ba26d819f5', '[\"*\"]', NULL, '2022-08-02 20:04:33', '2022-08-02 20:04:33'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '40d6b329e4a6d5805202860ed3036ffcc03d465bc967b4f8049a3f8cf6802d2a', '[\"*\"]', NULL, '2022-08-02 20:17:31', '2022-08-02 20:17:31'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '99103476df8ba180366a258ea70867a01ec75a081600cd9b091ce2ec5da8db00', '[\"*\"]', NULL, '2022-08-02 20:44:51', '2022-08-02 20:44:51'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '420a96840611f224aea12b07182f6c3cf6cdc2823ee58a5ec3fbc2a5689bf00f', '[\"*\"]', NULL, '2022-08-02 23:00:02', '2022-08-02 23:00:02'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'e0056d2e5a0c5e91a23a30954422c4f770147729e50fe1611313359c643d3605', '[\"*\"]', NULL, '2022-08-02 23:03:21', '2022-08-02 23:03:21'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'ff123be4f5051cbb99c0fef7cec5d6a78f000ebd5a5729cd34d1725c03cbbf76', '[\"*\"]', NULL, '2022-08-02 23:06:29', '2022-08-02 23:06:29'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '80a1c15fad9175af4efab7d14b7717027786e48065f95a83352c2016d50db97d', '[\"*\"]', NULL, '2022-08-02 23:10:06', '2022-08-02 23:10:06'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'ee2d544956ec6443baa7c17a12daf0c5597396414d52b79a7eb9a7ed0de24e78', '[\"*\"]', NULL, '2022-08-03 00:05:51', '2022-08-03 00:05:51'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'f6367ebefdb046a263479859bafd62b623467b7c645140a416a952966fca257a', '[\"*\"]', NULL, '2022-08-03 03:41:20', '2022-08-03 03:41:20'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '20cffcd051bc466ef9b4c8a2bee89c4ca290d254b95af02d44bf60e5dd57ca4c', '[\"*\"]', NULL, '2022-08-03 14:52:52', '2022-08-03 14:52:52'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '05c2686717559e784fb1601b9c3b8479b2764c8547454c72b38dfc1bb6bde43f', '[\"*\"]', NULL, '2022-08-03 14:54:17', '2022-08-03 14:54:17'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '44196817e3e7d5ede963ebc5a4ecb86659dde1e730ece14c616d96e11bf03ccd', '[\"*\"]', NULL, '2022-08-04 05:22:41', '2022-08-04 05:22:41'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '36e796a60e3389b6f99b8ded7947c771edabe959d6f08ea75da328380d7bc8d2', '[\"*\"]', NULL, '2022-08-05 04:21:39', '2022-08-05 04:21:39'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '800ab7217cfa9c41ad7a36104d5912d484c28a6cd957653182bf8fe9150e52c3', '[\"*\"]', NULL, '2022-08-05 13:08:43', '2022-08-05 13:08:43'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'c8705b9be8c1155256484144f862b6bb57d1120b420757cb59e8db67536426a5', '[\"*\"]', NULL, '2022-08-08 04:47:43', '2022-08-08 04:47:43'),
-(0, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '70e5b87140bd8166d9d3c6e3e42cf21b9dd309a59770e59be9370419a1f32d92', '[\"*\"]', NULL, '2022-08-09 04:25:36', '2022-08-09 04:25:36'),
-(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '7002db54e68d78d2ab27bf626c07e512bb38f8412a932d800de0b16fdf9448c7', '[\"*\"]', NULL, '2022-08-09 04:31:47', '2022-08-09 04:31:47'),
-(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', '5c28288cb8934d94133a3c9262607f09d1bef6a7605aa0e940c53a31223674ae', '[\"*\"]', NULL, '2022-08-09 04:32:24', '2022-08-09 04:32:24'),
-(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', 'ccc8b988d3a8584f5ccffefed3ab078fdc1a472a48e44285749b89bba8dfa4cf', '[\"*\"]', NULL, '2022-08-09 04:32:53', '2022-08-09 04:32:53'),
-(0, 'App\\Models\\User', 8, 'LaravelSanctumAuth', 'c05f804f452f16849ba57d7498f9bd825d483c1f2ef5aa861846910e14ccc1e2', '[\"*\"]', NULL, '2022-08-09 04:34:11', '2022-08-09 04:34:11'),
-(0, 'App\\Models\\User', 16, 'LaravelSanctumAuth', '26f03340d464ea1cdd852438cdf0b98fddc22f3dd57580c02fbd2d5dfda205bf', '[\"*\"]', NULL, '2022-08-09 04:38:14', '2022-08-09 04:38:14'),
-(0, 'App\\Models\\User', 17, 'LaravelSanctumAuth', '9890fff438b73dcaa1a2349a878e47fd9d7b2e757dd9a1f9f2e4b3bf5e5da67e', '[\"*\"]', NULL, '2022-08-09 04:44:33', '2022-08-09 04:44:33');
+(4, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '70f2917f647118ab139b329db507f93562382228a92fab46cd671c24c5013d49', '[\"*\"]', '2022-08-10 05:12:39', '2022-08-10 05:01:29', '2022-08-10 05:12:39'),
+(5, 'App\\Models\\User', 15, 'LaravelSanctumAuth', 'b3bb0f4dbb502ca773715d117e5e8fa756de71324da7c9af747d2ab83187a47e', '[\"*\"]', '2022-08-10 12:22:09', '2022-08-10 05:13:45', '2022-08-10 12:22:09'),
+(6, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '24973082b318fc585d9df55b2431892bd6538daa0d8a2bf818dc6bf5e0f0d948', '[\"*\"]', '2022-08-10 11:30:33', '2022-08-10 06:13:39', '2022-08-10 11:30:33'),
+(7, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '4f50da423bc770a4637dbeb67c7f058836fffd4fb12f7fa3b368a68a04d37a7a', '[\"*\"]', NULL, '2022-08-10 07:05:14', '2022-08-10 07:05:14'),
+(8, 'App\\Models\\User', 1, 'LaravelSanctumAuth', '662bc6f46bc4658228c45cffd346b31913643c8a0d6d857f39bb743107a08f6e', '[\"*\"]', '2022-08-10 12:50:27', '2022-08-10 11:49:28', '2022-08-10 12:50:27'),
+(9, 'App\\Models\\User', 15, 'LaravelSanctumAuth', 'a4fa57698181d32f4dd4f1dd0e781791fc143c5812b169240d440926c9bd8ba0', '[\"*\"]', '2022-08-10 12:28:24', '2022-08-10 12:28:10', '2022-08-10 12:28:24'),
+(10, 'App\\Models\\User', 1, 'LaravelSanctumAuth', 'eee760a7114eab76b15935b9e86ba4ef8cd4602a2549f7f5d49fc923af424f32', '[\"*\"]', NULL, '2022-08-10 12:29:02', '2022-08-10 12:29:02'),
+(11, 'App\\Models\\User', 8, 'LaravelSanctumAuth', 'b85f3bb97b134de1bb26bc591bcb84c48695acc56d9896574ca2da95daa53214', '[\"*\"]', '2022-08-10 12:47:51', '2022-08-10 12:29:29', '2022-08-10 12:47:51');
 
 -- --------------------------------------------------------
 
@@ -1294,7 +1235,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `contact_no`, `image`, `remember_token`, `permissionid`, `status`, `deleted_at`, `created_by`, `updated_by`, `created_at`, `updated_at`, `device_token`) VALUES
-(1, 'SuperAdmin', 'superamin@gmail.com', NULL, '$2y$10$fOtFfLEJ30EAC6U/0fOl6ed3ckJagB9llEzt1.FSIhIDTKHbQyBDC', '', '/users/avatar2_1656680911.png', NULL, 1, 1, NULL, NULL, 1, '2022-06-23 02:37:41', '2022-07-07 04:57:09', NULL),
+(1, 'SuperAdmin', 'superamin@gmail.com', NULL, '$2y$10$qwKmnIuKpY0GnJxFAr1lfOEf8xYmz8qMxm52V57iHwgbl6VXa.W5.', '', '/users/avatar2_1656680911.png', NULL, 1, 1, NULL, NULL, 1, '2022-06-23 02:37:41', '2022-08-10 05:01:29', NULL),
 (2, 'Admin', 'admin@gmail.com', NULL, '$2y$10$VseD2y93UMRgObkxY0jad.P1zDV1k7sD9ZQ1peIh32Y4Zg8K4AgLu', '', '/users/avatar_1656680891.png', NULL, 1, 1, NULL, NULL, 1, '2022-06-23 04:09:09', '2022-07-01 07:38:11', NULL),
 (6, 'Rahul', 'rahul@gmail.com', NULL, '$2y$10$Rs56cvXtL7tE4jMTdnIC7OOpfnN98C/qjhHNi395j9wphRmqW39bO', '', '/users/avatar5_1656680878.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:27:55', '2022-07-07 23:21:31', NULL),
 (7, 'Yogesh', 'yogesh@gmail.com', NULL, '$2y$10$DLglPsQXdKjSYozgrZ.Pq.xojOxU4OwBzQfuLDWf40YumJmc3LfHW', '', '/users/avatar_1656680861.png', NULL, NULL, 1, NULL, NULL, 1, '2022-06-29 02:34:14', '2022-07-07 23:21:13', 'cvEAfRpouEW9Z10KkOODyh:APA91bFXcZUoa-KqP5iQFlVeH8jWfUNk2b6APAYYDOH5ynQYyNvqHUQi7ip3JpiK1XjY89C6cti38w2hDWfQ060-bTKIFqBh7sl1VhbzjmuGox4HEhLL3wZKSk57aHHgocW3kuGTE64K'),
@@ -1524,6 +1465,12 @@ ALTER TABLE `menuses`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -1549,7 +1496,7 @@ ALTER TABLE `web_settings`
 -- AUTO_INCREMENT for table `booked_artists`
 --
 ALTER TABLE `booked_artists`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `booked_artist_dates`
@@ -1561,7 +1508,7 @@ ALTER TABLE `booked_artist_dates`
 -- AUTO_INCREMENT for table `booking_forms`
 --
 ALTER TABLE `booking_forms`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `custom_fields`
@@ -1598,6 +1545,12 @@ ALTER TABLE `menuitem`
 --
 ALTER TABLE `menuses`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `roles`

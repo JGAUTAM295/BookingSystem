@@ -54,12 +54,19 @@ class AuthController extends BaseController
             }
             else
             {
-                if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+                if(Auth::attempt(['email' => $request->email, 'password' => $request->password]))
+                {
+                    if(!empty($request->device_token))
+                    {
+                        Auth::user()->update(['device_token' => $request->device_token]);
+                    }
+                    
                     $auth = Auth::user(); 
                     $success['token'] =  $auth->createToken('LaravelSanctumAuth')->plainTextToken; 
                     $success['id'] =  $auth->id;
                     $success['name'] =  $auth->name;
                     $success['email'] =  $auth->email;
+                    $success['role']  =  $auth->roles->pluck('name')[0];
                     $success['image'] =  asset($auth->image);
            
                     return $this->handleResponse($success, 'User logged-in!');
@@ -94,7 +101,11 @@ class AuthController extends BaseController
         $newUser = User::find($user->id);
         $newUser->status = '1';
         $newUser->updated_by =  $user->id;
-
+        if(!empty($request->device_token))
+        {
+            $newUser->device_token = $request->device_token;
+        }
+        
         if($request->hasFile('image')){
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -202,6 +213,7 @@ class AuthController extends BaseController
 
     public function logout(Request $request)
     {
+        Auth::user()->update(['device_token' => '']);
         Auth::user()->tokens()->delete();
 
         return $this->handleResponse('User logged out!', 200);
